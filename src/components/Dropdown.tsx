@@ -1,20 +1,28 @@
-export const Dropdown = () => {
-  const title = "Dropdown 1";
-  const id = "dropdown1";
-  const options = [
-    { label: "Option A1", value: "a1" },
-    { label: "Option B1", value: "b1" },
-    { label: "Option C1", value: "c1" },
-  ];
+import { toCamelCase } from "../utils";
+
+const defaultOptions = [
+  {
+    name: ["Tanque", "Tank-esque"],
+    formulaName: "ROCK",
+  },
+  {
+    name: ["Orco", "Orc"],
+    formulaName: "ORCO",
+  },
+]
+
+export const Dropdown = ({options = defaultOptions, chosenLang = 0, title = ['Dropdown'] }) => {
+  const cleanTitle = Array.isArray(title) ? title[chosenLang] : 'Dropdown'
+  const id = toCamelCase(cleanTitle)
 
   return (
     <>
-      <label htmlFor={id}>{title}</label>
+      <label htmlFor={id}>{cleanTitle}</label>
       <select id={id} className="block w-full mt-1">
         {options.map((opt) => {
           return (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
+            <option key={opt.formulaName} value={opt.formulaName}>
+              {opt.name[chosenLang]}
             </option>
           );
         })}

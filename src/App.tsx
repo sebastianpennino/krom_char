@@ -2,6 +2,125 @@ import { Dropdown } from "./components/Dropdown";
 import { NumericInput } from "./components/NumericInput";
 import { TextInput } from "./components/TextInput";
 
+const species = [
+  {
+    name: ["Tanque", "Tank-esque"],
+    formulaName: "ROCK",
+  },
+  {
+    name: ["Orco", "Orc"],
+    formulaName: "ORCO",
+  },
+  {
+    name: ["Feral", "Feral"],
+    formulaName: "FERAL",
+  },
+  {
+    name: ["Humano", "Human"],
+    formulaName: "HUMANO",
+  },
+  {
+    name: ["Treno", "Treno"],
+    formulaName: "TRENO",
+  },
+  {
+    name: ["Elfo", "Elf"],
+    formulaName: "ELFO",
+  },
+  {
+    name: ["Magica Full", "Magic Full"],
+    formulaName: "FEY",
+  },
+];
+
+const classes = [
+  {
+    name: ["Asesino", "Assasin"],
+    formulaName: "ASESINO",
+  },
+  {
+    name: ["Ladron", "Thief"],
+    formulaName: "LADRON",
+  },
+  {
+    name: ["Guerrero", "Warrior"],
+    formulaName: "GUERRERO",
+  },
+  {
+    name: ["Monje", "Monk"],
+    formulaName: "MONJE",
+  },
+  {
+    name: ["Cazador", "Hunter"],
+    formulaName: "CAZADOR",
+  },
+  {
+    name: ["M-Guerrero", "W-Mage"],
+    formulaName: "MAGO_GUERRERO",
+  },
+  {
+    name: ["Shaman", "Shaman"],
+    formulaName: "SHAMAN",
+  },
+  {
+    name: ["Mago", "Mage"],
+    formulaName: "MAGO",
+  },
+];
+
+const characteristics = [
+  {
+    name: ["Fuerza", "Strength"],
+    formulaName: "Fu",
+  },
+  {
+    name: ["Resistencia", "Fortitude"],
+    formulaName: "Re",
+  },
+  {
+    name: ["Agilidad", "Agility"],
+    formulaName: "Ag",
+  },
+  {
+    name: ["Razon", "Reasoning"],
+    formulaName: "Ra",
+  },
+  {
+    name: ["Intuicion", "Intuition"],
+    formulaName: "Int",
+  },
+  {
+    name: ["Sabiduria", "Knowledge"],
+    formulaName: "Sab",
+  },
+  {
+    name: ["Social", "Social"],
+    formulaName: "Soc",
+  },
+  {
+    name: ["Percepcion", "Perception"],
+    formulaName: "Per",
+  },
+  {
+    name: ["Voluntad", "Willpower"],
+    formulaName: "Vo",
+  },
+];
+
+const subclasses = [
+  {
+    name: ["NOT READY", "NOT READY"],
+    formulaName: "temp",
+  },
+]
+
+const langs = {
+  esp: 0,
+  eng: 1,
+};
+
+const chosenLanguage = langs.esp;
+
 function App() {
   return (
     <div className="flex flex-col h-screen border border-red-600">
@@ -15,23 +134,25 @@ function App() {
       <main className="flex-grow p-4 space-y-4">
         <div className="flex space-x-4">
           <div className="w-1/3">
-            <Dropdown />
+            <Dropdown
+              title={["Especie", "Species"]}
+              options={species}
+              chosenLang={chosenLanguage}
+            />
           </div>
           <div className="w-1/3">
-            <label htmlFor="dropdown2">Dropdown 2</label>
-            <select id="dropdown2" className="block w-full mt-1">
-              <option value="d">Option D</option>
-              <option value="e">Option E</option>
-              <option value="f">Option F</option>
-            </select>
+            <Dropdown
+              title={["Clase", "Class"]}
+              options={classes}
+              chosenLang={chosenLanguage}
+            />
           </div>
           <div className="w-1/3">
-            <label htmlFor="dropdown3">Dropdown 3</label>
-            <select id="dropdown3" className="block w-full mt-1">
-              <option value="g">Option G</option>
-              <option value="h">Option H</option>
-              <option value="i">Option I</option>
-            </select>
+            <Dropdown
+              title={["Sub-Clase", "Sub-Class"]}
+              options={subclasses}
+              chosenLang={chosenLanguage}
+            />
           </div>
         </div>
         <div>
@@ -49,41 +170,16 @@ function App() {
           </select>
         </div>
         <div className="grid grid-cols-3 gap-4">
-          <div>
-            <NumericInput />
-          </div>
-          <div>
-            <label htmlFor="re">Re</label>
-            <input id="re" type="number" min="1" max="5" step="1" className="block w-full mt-1" />
-          </div>
-          <div>
-            <label htmlFor="ag">Ag</label>
-            <input id="ag" type="number" min="1" max="5" step="1" className="block w-full mt-1" />
-          </div>
-          <div>
-            <label htmlFor="ra">Ra</label>
-            <input id="ra" type="number" min="1" max="5" step="1" className="block w-full mt-1" />
-          </div>
-          <div>
-            <label htmlFor="intu">Intu</label>
-            <input id="intu" type="number" min="1" max="5" step="1" className="block w-full mt-1" />
-          </div>
-          <div>
-            <label htmlFor="sab">Sab</label>
-            <input id="sab" type="number" min="1" max="5" step="1" className="block w-full mt-1" />
-          </div>
-          <div>
-            <label htmlFor="soc">Soc</label>
-            <input id="soc" type="number" min="1" max="5" step="1" className="block w-full mt-1" />
-          </div>
-          <div>
-            <label htmlFor="per">Per</label>
-            <input id="per" type="number" min="1" max="5" step="1" className="block w-full mt-1" />
-          </div>
-          <div>
-            <label htmlFor="vo">Vo</label>
-            <input id="vo" type="number" min="1" max="5" step="1" className="block w-full mt-1" />
-          </div>
+          {characteristics.map((char) => {
+            return (
+              <div key={char.formulaName}>
+                <NumericInput
+                  title={char.name[chosenLanguage]}
+                  unique={char.formulaName}
+                />
+              </div>
+            );
+          })}
         </div>
         <div className="flex justify-center mt-4">
           <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
