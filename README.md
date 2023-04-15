@@ -5,3 +5,6 @@ PWA Kromsys character creator
 ```
   yarn dev
 ```
+
+# Tailwind cheat sheet
+`https://nerdcave.com/tailwind-cheat-sheet`
