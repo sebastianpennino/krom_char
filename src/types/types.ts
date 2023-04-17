@@ -1,3 +1,65 @@
+export enum Characteristics {
+  FUERZA = "Fu",
+  RESISTENCIA = "Re",
+  AGILIDAD = "Ag",
+  RAZON = "Ra",
+  INTUICION = "Intu",
+  SABIDURIA = "Sab",
+  SOCIAL = "Soc",
+  PERCEPCION = "Per",
+  VOLUNTAD = "Vo",
+}
+
+export type ValidCharacteristics =
+  | Characteristics.FUERZA
+  | Characteristics.RESISTENCIA
+  | Characteristics.AGILIDAD
+  | Characteristics.RAZON
+  | Characteristics.INTUICION
+  | Characteristics.SABIDURIA
+  | Characteristics.SOCIAL
+  | Characteristics.PERCEPCION
+  | Characteristics.VOLUNTAD;
+
+export const characteristics = [
+  {
+    name: ["Fuerza", "Strength"],
+    formulaName: Characteristics.FUERZA,
+  },
+  {
+    name: ["Resistencia", "Fortitude"],
+    formulaName: Characteristics.RESISTENCIA,
+  },
+  {
+    name: ["Agilidad", "Agility"],
+    formulaName: Characteristics.AGILIDAD,
+  },
+  {
+    name: ["Razon", "Reasoning"],
+    formulaName: Characteristics.RAZON,
+  },
+  {
+    name: ["Intuicion", "Intuition"],
+    formulaName: Characteristics.INTUICION,
+  },
+  {
+    name: ["Sabiduria", "Knowledge"],
+    formulaName: Characteristics.SABIDURIA,
+  },
+  {
+    name: ["Social", "Social"],
+    formulaName: Characteristics.SOCIAL,
+  },
+  {
+    name: ["Percepcion", "Perception"],
+    formulaName: Characteristics.PERCEPCION,
+  },
+  {
+    name: ["Voluntad", "Willpower"],
+    formulaName: Characteristics.VOLUNTAD,
+  },
+];
+
 export enum PlayerClasses {
   ASESINO = "ASESINO",
   LADRON = "LADRON",
@@ -38,28 +100,137 @@ export type ValidSpecies =
   | PlayerSpecies.ELFO
   | PlayerSpecies.FEY;
 
-export enum Characteristics {
-  FUERZA = "Fu",
-  RESISTENCIA = "Re",
-  AGILIDAD = "Ag",
-  RAZON = "Ra",
-  INTUICION = "Intu",
-  SABIDURIA = "Sab",
-  SOCIAL = "Soc",
-  PERCEPCION = "Per",
-  VOLUNTAD = "Vo",
-}
+type SpeciesStats = {
+  v: number;
+  m: number;
+  a: number;
+  mods: {
+    [Characteristics.FUERZA]: -1 | 0 | 1;
+    [Characteristics.RESISTENCIA]: -1 | 0 | 1;
+    [Characteristics.AGILIDAD]: -1 | 0 | 1;
+    [Characteristics.RAZON]: -1 | 0 | 1;
+    [Characteristics.INTUICION]: -1 | 0 | 1;
+    [Characteristics.SABIDURIA]: -1 | 0 | 1;
+    [Characteristics.SOCIAL]: -1 | 0 | 1;
+    [Characteristics.PERCEPCION]: -1 | 0 | 1;
+    [Characteristics.VOLUNTAD]: -1 | 0 | 1;
+  };
+};
 
-export type ValidCharacteristics =
-  | Characteristics.FUERZA
-  | Characteristics.RESISTENCIA
-  | Characteristics.AGILIDAD
-  | Characteristics.RAZON
-  | Characteristics.INTUICION
-  | Characteristics.SABIDURIA
-  | Characteristics.SOCIAL
-  | Characteristics.PERCEPCION
-  | Characteristics.VOLUNTAD;
+const speciesStat: Record<ValidSpecies, SpeciesStats> = {
+  [PlayerSpecies.TANQUE]: {
+    v: 115,
+    m: 60,
+    a: 75,
+    mods: {
+      [Characteristics.FUERZA]: 1,
+      [Characteristics.RESISTENCIA]: 1,
+      [Characteristics.AGILIDAD]: -1,
+      [Characteristics.RAZON]: 0,
+      [Characteristics.INTUICION]: -1,
+      [Characteristics.SABIDURIA]: 0,
+      [Characteristics.SOCIAL]: 0,
+      [Characteristics.PERCEPCION]: 0,
+      [Characteristics.VOLUNTAD]: 1,
+    },
+  },
+  [PlayerSpecies.ORCO]: {
+    v: 90,
+    m: 70,
+    a: 90,
+    mods: {
+      [Characteristics.FUERZA]: 1,
+      [Characteristics.RESISTENCIA]: 0,
+      [Characteristics.AGILIDAD]: 0,
+      [Characteristics.RAZON]: -1,
+      [Characteristics.INTUICION]: 0,
+      [Characteristics.SABIDURIA]: 0,
+      [Characteristics.SOCIAL]: 0,
+      [Characteristics.PERCEPCION]: 1,
+      [Characteristics.VOLUNTAD]: 0,
+    },
+  },
+  [PlayerSpecies.FERAL]: {
+    v: 75,
+    m: 60,
+    a: 115,
+    mods: {
+      [Characteristics.FUERZA]: 0,
+      [Characteristics.RESISTENCIA]: 1,
+      [Characteristics.AGILIDAD]: 1,
+      [Characteristics.RAZON]: -1,
+      [Characteristics.INTUICION]: 0,
+      [Characteristics.SABIDURIA]: -1,
+      [Characteristics.SOCIAL]: 0,
+      [Characteristics.PERCEPCION]: 1,
+      [Characteristics.VOLUNTAD]: 0,
+    },
+  },
+  [PlayerSpecies.HUMANO]: {
+    v: 75,
+    m: 90,
+    a: 85,
+    mods: {
+      [Characteristics.FUERZA]: 0,
+      [Characteristics.RESISTENCIA]: 0,
+      [Characteristics.AGILIDAD]: 0,
+      [Characteristics.RAZON]: 1,
+      [Characteristics.INTUICION]: 0,
+      [Characteristics.SABIDURIA]: 0,
+      [Characteristics.SOCIAL]: 1,
+      [Characteristics.PERCEPCION]: 0,
+      [Characteristics.VOLUNTAD]: 0,
+    },
+  },
+  [PlayerSpecies.TRENO]: {
+    v: 60,
+    m: 90,
+    a: 100,
+    mods: {
+      [Characteristics.FUERZA]: 0,
+      [Characteristics.RESISTENCIA]: 0,
+      [Characteristics.AGILIDAD]: 1,
+      [Characteristics.RAZON]: 1,
+      [Characteristics.INTUICION]: 1,
+      [Characteristics.SABIDURIA]: 0,
+      [Characteristics.SOCIAL]: 0,
+      [Characteristics.PERCEPCION]: -1,
+      [Characteristics.VOLUNTAD]: 0,
+    },
+  },
+  [PlayerSpecies.ELFO]: {
+    v: 65,
+    m: 110,
+    a: 75,
+    mods: {
+      [Characteristics.FUERZA]: 0,
+      [Characteristics.RESISTENCIA]: -1,
+      [Characteristics.AGILIDAD]: 0,
+      [Characteristics.RAZON]: 0,
+      [Characteristics.INTUICION]: 0,
+      [Characteristics.SABIDURIA]: 1,
+      [Characteristics.SOCIAL]: 0,
+      [Characteristics.PERCEPCION]: 1,
+      [Characteristics.VOLUNTAD]: 0,
+    },
+  },
+  [PlayerSpecies.FEY]: {
+    v: 50,
+    m: 140,
+    a: 60,
+    mods: {
+      [Characteristics.FUERZA]: -1,
+      [Characteristics.RESISTENCIA]: -1,
+      [Characteristics.AGILIDAD]: 0,
+      [Characteristics.RAZON]: 1,
+      [Characteristics.INTUICION]: 0,
+      [Characteristics.SABIDURIA]: 1,
+      [Characteristics.SOCIAL]: 0,
+      [Characteristics.PERCEPCION]: 0,
+      [Characteristics.VOLUNTAD]: 1,
+    },
+  },
+};
 
 export const species = [
   {
@@ -290,44 +461,5 @@ export const classes = [
   {
     name: ["Mago", "Mage"],
     formulaName: PlayerClasses.MAGO,
-  },
-];
-
-export const characteristics = [
-  {
-    name: ["Fuerza", "Strength"],
-    formulaName: Characteristics.FUERZA,
-  },
-  {
-    name: ["Resistencia", "Fortitude"],
-    formulaName: Characteristics.RESISTENCIA,
-  },
-  {
-    name: ["Agilidad", "Agility"],
-    formulaName: Characteristics.AGILIDAD,
-  },
-  {
-    name: ["Razon", "Reasoning"],
-    formulaName: Characteristics.RAZON,
-  },
-  {
-    name: ["Intuicion", "Intuition"],
-    formulaName: Characteristics.INTUICION,
-  },
-  {
-    name: ["Sabiduria", "Knowledge"],
-    formulaName: Characteristics.SABIDURIA,
-  },
-  {
-    name: ["Social", "Social"],
-    formulaName: Characteristics.SOCIAL,
-  },
-  {
-    name: ["Percepcion", "Perception"],
-    formulaName: Characteristics.PERCEPCION,
-  },
-  {
-    name: ["Voluntad", "Willpower"],
-    formulaName: Characteristics.VOLUNTAD,
   },
 ];

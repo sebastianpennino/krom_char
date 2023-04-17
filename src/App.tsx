@@ -1,7 +1,13 @@
 import { Dropdown } from "./components/Dropdown";
 import { NumericInput } from "./components/NumericInput";
 import { TextInput } from "./components/TextInput";
-import { species, classes, subclasses, PlayerClasses, characteristics } from "./types/types";
+import {
+  species,
+  classes,
+  subclasses,
+  PlayerClasses,
+  characteristics,
+} from "./types/types";
 
 const langs = {
   esp: 0,
@@ -12,7 +18,7 @@ const chosenLanguage = langs.esp;
 
 function App() {
   return (
-    <div className="flex flex-col h-screen border border-red-600">
+    <div className="flex flex-col h-screen">
       {/* Header */}
       <header className="flex items-center justify-between px-4 py-3 bg-gray-900">
         <div className="text-white">Logo</div>
@@ -73,7 +79,9 @@ function App() {
           })}
         </div>
         <div className="flex justify-center mt-4">
-          <button className="w-full px-4 py-2 text-white rounded">Calculate</button>
+          <button className="w-full px-4 py-2 text-white rounded">
+            Calculate
+          </button>
         </div>
       </main>
 
