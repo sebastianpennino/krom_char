@@ -463,3 +463,9 @@ export const classes = [
     formulaName: PlayerClasses.MAGO,
   },
 ];
+
+export const selectFirstSubClass = (playerClass: ValidPlayerClasses)=> {
+  return subclasses.find(subClass => {
+    return subClass.dependsOn === playerClass
+  })?.formulaName
+}

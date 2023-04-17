@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { toCamelCase } from "../utils";
 
+type Props = {
+  title: string,
+  unique: string,
+  mod?: number,
+  min?: number,
+  max?: number,
+  changeFn: any
+}
+
 export const NumericInput = ({
   title = "Fu",
   unique = "",
   mod = 0,
   min = 1,
   max = 5,
-}) => {
+  changeFn
+}: Props) => {
   const uid = unique || toCamelCase(title);
   const [value, setValue] = useState<number>(1);
   const modText = mod < 0 ? `(${mod})` : mod > 0 ? `(+${mod})` : "";

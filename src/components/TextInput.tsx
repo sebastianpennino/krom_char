@@ -4,9 +4,10 @@ import { removeNonLettersHyphensUnderscores, toCamelCase } from "../utils";
 export const TextInput = ({
   title = ["Nombre del personaje", "Character Name" ],
   placeholder = ["Ingresa un nombre", "Enter your character name"],
-  chosenLang = 0
+  chosenLang = 0,
+  initialValue = ''
 }) => {
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>(initialValue);
   const id = toCamelCase(title[chosenLang]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
