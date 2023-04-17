@@ -7,11 +7,12 @@ import {
   classes,
   subclasses,
   PlayerClasses,
-  characteristics,
+  characteristicsToName,
   Characteristics,
   selectFirstSubClass,
   PlayerSpecies,
   PlayerSubClasses,
+  ValidCharacteristics,
 } from "./types/types";
 import { getRandomCharacterName } from "./utils";
 
@@ -24,8 +25,8 @@ const chosenLanguage = langs.esp;
 
 const initialState = {
   charSpecies: PlayerSpecies.TANQUE,
-  charClass: PlayerClasses.ASESINO,
-  charSubClass: PlayerSubClasses.SICARIO,
+  charClass: PlayerClasses.GUERRERO,
+  charSubClass: PlayerSubClasses.BARBARO,
   charStats: {
     [Characteristics.FUERZA]: 1,
     [Characteristics.RESISTENCIA]: 1,
@@ -38,12 +39,18 @@ const initialState = {
     [Characteristics.VOLUNTAD]: 1,
   },
   charName: getRandomCharacterName(),
+  sumLimit: 32,
 };
 
 // @ts-ignore
 function reducer(state, action) {
-  console.log("Reducer!");
   switch (action.type) {
+    case "CHANGE_LIMIT": {
+      return {
+        ...state,
+        sumLimit: action.payload,
+      };
+    }
     case "SELECT_SPECIES": {
       return {
         ...state,
@@ -63,10 +70,34 @@ function reducer(state, action) {
         charSubClass: action.payload,
       };
     }
-    case "CHANGE_STAT": {
+    case "INCREASE_STAT": {
+      const newStats = {
+        ...state.charStats,
+        [action.payload]: state.charStats[action.payload] + 1,
+      };
       return {
         ...state,
-        charStats: action.payload,
+        charStats: newStats,
+      };
+    }
+    case "DECREASE_STAT": {
+      const newStats = {
+        ...state.charStats,
+        [action.payload]: state.charStats[action.payload] - 1,
+      };
+      return {
+        ...state,
+        charStats: newStats,
+      };
+    }
+    case "CHANGE_STAT": {
+      const charStats = {
+        ...state.charStats,
+        [action.payload.statName]: action.payload.val,
+      };
+      return {
+        ...state,
+        charStats,
       };
     }
     case "CHANGE_NAME": {
@@ -81,6 +112,13 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const sumLimit = state.sumLimit;
+
+  const sumOfStats = Object.entries(state.charStats).reduce((acc, el) => {
+    const [key, val] = el as [string, number];
+    return acc + val;
+  }, 0);
 
   const changeSpecies = (newValue: any) => {
     dispatch({
@@ -100,11 +138,27 @@ function App() {
       payload: newValue,
     });
   };
-  const changeStats = (newValue: any) => {
-    dispatch({
-      type: "CHANGE_STAT",
-      payload: newValue,
-    });
+  const changeStats = (newValue: any, statName: string) => {
+    if (sumOfStats < sumLimit) {
+      if (newValue === "inc") {
+        return dispatch({
+          type: "INCREASE_STAT",
+          payload: statName,
+        });
+      }
+    }
+    if (newValue === "dec") {
+      return dispatch({
+        type: "DECREASE_STAT",
+        payload: statName,
+      });
+    }
+    if (typeof newValue === "number") {
+      return dispatch({
+        type: "CHANGE_STAT",
+        payload: { val: newValue, statName },
+      });
+    }
   };
 
   return (
@@ -118,12 +172,11 @@ function App() {
       {/* Main Content */}
       <main className="flex-grow p-4 space-y-4">
         {/* Visual Debug */}
-        {/*
+        {/* 
         <small>
-          <pre>{JSON.stringify(state, null, 2)}</pre>
-        </small>
+          <pre>{JSON.stringify({ ...state, sum: sumOfStats }, null, 2)}</pre>
+        </small> 
         */}
-
         <div className="flex space-x-4">
           <div className="w-1/3">
             <Dropdown
@@ -131,6 +184,7 @@ function App() {
               options={species}
               chosenLang={chosenLanguage}
               changeFn={changeSpecies}
+              selection={state.charSpecies}
             />
           </div>
           <div className="w-1/3">
@@ -139,6 +193,7 @@ function App() {
               options={classes}
               chosenLang={chosenLanguage}
               changeFn={changeClass}
+              selection={state.charClass}
             />
           </div>
           <div className="w-1/3">
@@ -152,6 +207,7 @@ function App() {
                 );
               }}
               changeFn={changeSubClass}
+              selection={state.charSubClass}
             />
           </div>
         </div>
@@ -162,8 +218,19 @@ function App() {
           />
         </div>
         <div>
-          <label htmlFor="dropdown4">Dropdown 4</label>
-          <select id="dropdown4" className="block w-full mt-1">
+          <label htmlFor="limit">{["Limite", "Limit"][chosenLanguage]}</label>
+          <select
+            id="limit"
+            className="block w-full mt-1"
+            onChange={(e) => {
+              dispatch({
+                type: "CHANGE_LIMIT",
+                payload: parseInt(e.target.value, 10) || 20,
+              });
+            }}
+            defaultValue={state.sumLimit}
+          >
+            <option value="45">Max</option>
             <option value="32">32</option>
             <option value="28">28</option>
             <option value="26">26</option>
@@ -173,13 +240,14 @@ function App() {
           </select>
         </div>
         <div className="grid grid-cols-3 gap-4">
-          {characteristics.map((char) => {
+          {Object.entries(state.charStats).map(([key, val]: any) => {
             return (
               <NumericInput
-                key={char.formulaName}
-                title={char.name[chosenLanguage]}
-                unique={char.formulaName}
+                key={key}
+                title={characteristicsToName[key][chosenLanguage]}
+                unique={key}
                 changeFn={changeStats}
+                value={val}
               />
             );
           })}

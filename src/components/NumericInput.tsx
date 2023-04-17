@@ -8,50 +8,46 @@ type Props = {
   min?: number,
   max?: number,
   changeFn: any
+  value: number
 }
 
 export const NumericInput = ({
   title = "Fu",
-  unique = "",
+  unique,
   mod = 0,
   min = 1,
   max = 5,
-  changeFn
+  changeFn,
+  value
 }: Props) => {
-  const uid = unique || toCamelCase(title);
-  const [value, setValue] = useState<number>(1);
+  const uid = unique;
   const modText = mod < 0 ? `(${mod})` : mod > 0 ? `(+${mod})` : "";
   const abbrv = `(${uid})`;
 
   const decrement = () => {
-    setValue((prevValue) => {
-      if (prevValue > min) {
-        return prevValue - 1;
-      }
-      return prevValue;
-    });
+    if (value > min) {
+      changeFn('dec', uid)
+    }
   };
 
   const increment = () => {
-    setValue((prevValue) => {
-      if (prevValue < max) {
-        return prevValue + 1;
-      }
-      return prevValue;
-    });
+    if (value < max) {
+      changeFn('inc', uid)
+    }
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(parseInt(e.target.value, 10) || min);
+    const val = parseInt(e.target.value, 10) || min
+    changeFn(val, uid)
   };
 
   const onBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
     const clean = parseInt(e.target.value, 10);
     if (clean > max) {
-      setValue(max);
+      changeFn(max, uid)
     }
     if (clean < min) {
-      setValue(min);
+      changeFn(min, uid)
     }
   };
 

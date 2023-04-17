@@ -21,7 +21,8 @@ type Props = {
   chosenLang: number;
   title: string[];
   filterFn?: (options: opt) => boolean;
-  changeFn: any
+  changeFn: any;
+  selection: any;
 };
 
 export const Dropdown = ({
@@ -30,6 +31,7 @@ export const Dropdown = ({
   title = ["Dropdown"],
   filterFn,
   changeFn,
+  selection,
 }: Props) => {
   const cleanTitle = Array.isArray(title) ? title[chosenLang] : "Dropdown";
   const id = toCamelCase(cleanTitle);
@@ -40,14 +42,19 @@ export const Dropdown = ({
   }
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('onChange!', e.target.value)
-    changeFn(e.target.value)
-  }
+    console.log("onChange!", e.target.value);
+    changeFn(e.target.value);
+  };
 
   return (
     <>
       <label htmlFor={id}>{cleanTitle}</label>
-      <select id={id} className="block w-full mt-1" onChange={(e) => onChange(e)}>
+      <select
+        id={id}
+        className="block w-full mt-1"
+        onChange={(e) => onChange(e)}
+        value={selection}
+      >
         {cleanOpts.map((opt) => {
           return (
             <option key={opt.formulaName} value={opt.formulaName}>

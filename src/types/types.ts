@@ -21,6 +21,18 @@ export type ValidCharacteristics =
   | Characteristics.PERCEPCION
   | Characteristics.VOLUNTAD;
 
+export const characteristicsToName: Record<string, string[]> = {
+  [Characteristics.FUERZA]: ["Fuerza", "Strength"],
+  [Characteristics.RESISTENCIA]: ["Resistencia", "Fortitude"],
+  [Characteristics.AGILIDAD]: ["Agilidad", "Agility"],
+  [Characteristics.RAZON]: ["Razon", "Reasoning"],
+  [Characteristics.INTUICION]: ["Intuicion", "Intuition"],
+  [Characteristics.SABIDURIA]: ["Sabiduria", "Knowledge"],
+  [Characteristics.SOCIAL]: ["Social", "Social"],
+  [Characteristics.PERCEPCION]: ["Percepcion", "Perception"],
+  [Characteristics.VOLUNTAD]: ["Voluntad", "Willpower"],
+};
+/*
 export const characteristics = [
   {
     name: ["Fuerza", "Strength"],
@@ -59,7 +71,7 @@ export const characteristics = [
     formulaName: Characteristics.VOLUNTAD,
   },
 ];
-
+*/
 export enum PlayerClasses {
   ASESINO = "ASESINO",
   LADRON = "LADRON",
@@ -464,8 +476,8 @@ export const classes = [
   },
 ];
 
-export const selectFirstSubClass = (playerClass: ValidPlayerClasses)=> {
-  return subclasses.find(subClass => {
-    return subClass.dependsOn === playerClass
-  })?.formulaName
-}
+export const selectFirstSubClass = (playerClass: ValidPlayerClasses) => {
+  return subclasses.find((subClass) => {
+    return subClass.dependsOn === playerClass;
+  })?.formulaName;
+};
