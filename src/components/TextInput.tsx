@@ -2,11 +2,12 @@ import { useState } from "react";
 import { removeNonLettersHyphensUnderscores, toCamelCase } from "../utils";
 
 export const TextInput = ({
-  title = "Character Name",
-  placeholder = "Enter your character name",
+  title = ["Nombre del personaje", "Character Name" ],
+  placeholder = ["Ingresa un nombre", "Enter your character name"],
+  chosenLang = 0
 }) => {
   const [value, setValue] = useState<string>("");
-  const id = toCamelCase(title);
+  const id = toCamelCase(title[chosenLang]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(removeNonLettersHyphensUnderscores(e.target.value || ""));
@@ -14,12 +15,12 @@ export const TextInput = ({
 
   return (
     <>
-      <label htmlFor={id}>{title}</label>
+      <label htmlFor={id}>{title[chosenLang]}</label>
       <input
         id={id}
         type="text"
         className="block w-full mt-1"
-        placeholder={placeholder}
+        placeholder={placeholder[chosenLang]}
         onChange={(e) => onChange(e)}
         value={value}
       />

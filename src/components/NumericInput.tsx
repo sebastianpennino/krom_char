@@ -3,14 +3,15 @@ import { toCamelCase } from "../utils";
 
 export const NumericInput = ({
   title = "Fu",
-  unique = '',
+  unique = "",
   mod = 0,
   min = 1,
   max = 5,
 }) => {
-  const uid = unique || toCamelCase(title)
+  const uid = unique || toCamelCase(title);
   const [value, setValue] = useState<number>(1);
-  const modText = mod < 0 ? `(${mod})` : mod > 0 ? `(+${mod})` : ``;
+  const modText = mod < 0 ? `(${mod})` : mod > 0 ? `(+${mod})` : "";
+  const abbrv = `(${uid})`
 
   const decrement = () => {
     setValue((prevValue) => {
@@ -30,37 +31,39 @@ export const NumericInput = ({
     });
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(parseInt(e.target.value) || 0);
+    setValue(parseInt(e.target.value) || 1);
   };
 
   return (
     <div className="block w-full mt-1">
-      <label
-        htmlFor={uid}
-        className="w-full text-sm font-semibold"
-      >
-        {title} {modText}
+      <label htmlFor={uid} className="w-full text-xs font-semibold">
+        {title} {abbrv} {modText}
       </label>
-      <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
-        <button
-          onClick={decrement}
-          className="flex items-center justify-center font-bold py-2 px-4 rounded"
-        >
-          <span className="">-</span>
-        </button>
+      <div className="flex h-10 relative mt-1">
+        <div className="flex flex-col">
+          <button
+            onClick={increment}
+            title="increase"
+            className="h-1/2 flex items-center py-2 px-3 rounded"
+          >
+            <span className="text-xs">&#9650;</span>
+          </button>
+          <button
+            onClick={decrement}
+            title="decrease"
+            className="h-1/2 flex items-center py-2 px-3 rounded"
+          >
+            <span className="text-xs">&#9660;</span>
+          </button>
+        </div>
         <input
           type="text"
           value={value}
+          title={title}
           onChange={(e) => onChange(e)}
-          className="outline-none focus:outline-none text-center w-full font-semibold text-md hover:text-black focus:text-black md:text-base cursor-default flex items-center outline-none"
+          className="w-full text-center"
           name={uid}
         />
-        <button
-          onClick={increment}
-          className="flex items-center justify-center font-bold py-2 px-4 rounded"
-        >
-          <span className="">+</span>
-        </button>
       </div>
     </div>
   );

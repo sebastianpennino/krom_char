@@ -1,118 +1,7 @@
 import { Dropdown } from "./components/Dropdown";
 import { NumericInput } from "./components/NumericInput";
 import { TextInput } from "./components/TextInput";
-
-const species = [
-  {
-    name: ["Tanque", "Tank-esque"],
-    formulaName: "ROCK",
-  },
-  {
-    name: ["Orco", "Orc"],
-    formulaName: "ORCO",
-  },
-  {
-    name: ["Feral", "Feral"],
-    formulaName: "FERAL",
-  },
-  {
-    name: ["Humano", "Human"],
-    formulaName: "HUMANO",
-  },
-  {
-    name: ["Treno", "Treno"],
-    formulaName: "TRENO",
-  },
-  {
-    name: ["Elfo", "Elf"],
-    formulaName: "ELFO",
-  },
-  {
-    name: ["Magica Full", "Magic Full"],
-    formulaName: "FEY",
-  },
-];
-
-const classes = [
-  {
-    name: ["Asesino", "Assasin"],
-    formulaName: "ASESINO",
-  },
-  {
-    name: ["Ladron", "Thief"],
-    formulaName: "LADRON",
-  },
-  {
-    name: ["Guerrero", "Warrior"],
-    formulaName: "GUERRERO",
-  },
-  {
-    name: ["Monje", "Monk"],
-    formulaName: "MONJE",
-  },
-  {
-    name: ["Cazador", "Hunter"],
-    formulaName: "CAZADOR",
-  },
-  {
-    name: ["M-Guerrero", "W-Mage"],
-    formulaName: "MAGO_GUERRERO",
-  },
-  {
-    name: ["Shaman", "Shaman"],
-    formulaName: "SHAMAN",
-  },
-  {
-    name: ["Mago", "Mage"],
-    formulaName: "MAGO",
-  },
-];
-
-const characteristics = [
-  {
-    name: ["Fuerza", "Strength"],
-    formulaName: "Fu",
-  },
-  {
-    name: ["Resistencia", "Fortitude"],
-    formulaName: "Re",
-  },
-  {
-    name: ["Agilidad", "Agility"],
-    formulaName: "Ag",
-  },
-  {
-    name: ["Razon", "Reasoning"],
-    formulaName: "Ra",
-  },
-  {
-    name: ["Intuicion", "Intuition"],
-    formulaName: "Int",
-  },
-  {
-    name: ["Sabiduria", "Knowledge"],
-    formulaName: "Sab",
-  },
-  {
-    name: ["Social", "Social"],
-    formulaName: "Soc",
-  },
-  {
-    name: ["Percepcion", "Perception"],
-    formulaName: "Per",
-  },
-  {
-    name: ["Voluntad", "Willpower"],
-    formulaName: "Vo",
-  },
-];
-
-const subclasses = [
-  {
-    name: ["NOT READY", "NOT READY"],
-    formulaName: "temp",
-  },
-]
+import { species, classes, subclasses, PlayerClasses, characteristics } from "./types/types";
 
 const langs = {
   esp: 0,
@@ -152,11 +41,14 @@ function App() {
               title={["Sub-Clase", "Sub-Class"]}
               options={subclasses}
               chosenLang={chosenLanguage}
+              filterFn={(opt: any) => {
+                return opt.dependsOn === PlayerClasses.MAGO;
+              }}
             />
           </div>
         </div>
         <div>
-          <TextInput />
+          <TextInput chosenLang={chosenLanguage} />
         </div>
         <div>
           <label htmlFor="dropdown4">Dropdown 4</label>
@@ -172,19 +64,16 @@ function App() {
         <div className="grid grid-cols-3 gap-4">
           {characteristics.map((char) => {
             return (
-              <div key={char.formulaName}>
-                <NumericInput
-                  title={char.name[chosenLanguage]}
-                  unique={char.formulaName}
-                />
-              </div>
+              <NumericInput
+                key={char.formulaName}
+                title={char.name[chosenLanguage]}
+                unique={char.formulaName}
+              />
             );
           })}
         </div>
         <div className="flex justify-center mt-4">
-          <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
-            Calculate
-          </button>
+          <button className="w-full px-4 py-2 text-white rounded">Calculate</button>
         </div>
       </main>
 
