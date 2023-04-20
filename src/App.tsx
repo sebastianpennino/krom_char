@@ -13,6 +13,7 @@ import {
   PlayerSpecies,
   PlayerSubClasses,
   ValidCharacteristics,
+  speciesStat,
 } from "./types/types";
 import { getRandomCharacterName } from "./utils";
 
@@ -120,6 +121,25 @@ function App() {
     return acc + val;
   }, 0);
 
+  const getModifiersForCurrentSpecies = () => {
+    // @ts-ignore
+    if (speciesStat[state.charSpecies]) {
+      // @ts-ignore
+      return speciesStat[state.charSpecies].mods;
+    }
+    return {
+      [Characteristics.FUERZA]: -1,
+      [Characteristics.RESISTENCIA]: -1,
+      [Characteristics.AGILIDAD]: -1,
+      [Characteristics.RAZON]: -1,
+      [Characteristics.INTUICION]: -1,
+      [Characteristics.SABIDURIA]: -1,
+      [Characteristics.SOCIAL]: -1,
+      [Characteristics.PERCEPCION]: -1,
+      [Characteristics.VOLUNTAD]: -1,
+    };
+  };
+
   const changeSpecies = (newValue: any) => {
     dispatch({
       type: "SELECT_SPECIES",
@@ -218,7 +238,13 @@ function App() {
           />
         </div>
         <div>
-          <label htmlFor="limit">{["Limite", "Limit"][chosenLanguage]}</label>
+          <label htmlFor="limit">
+            {
+              ["Limite de caracteristicas", "Point limit for characteristics"][
+                chosenLanguage
+              ]
+            }
+          </label>
           <select
             id="limit"
             className="block w-full mt-1"
@@ -248,6 +274,9 @@ function App() {
                 unique={key}
                 changeFn={changeStats}
                 value={val}
+                mod={getModifiersForCurrentSpecies()[key]}
+                min={getModifiersForCurrentSpecies()[key] < 0 ? 2 : 1}
+                isUnder={val + getModifiersForCurrentSpecies()[key] <= 0}
               />
             );
           })}

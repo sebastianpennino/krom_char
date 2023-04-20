@@ -2,14 +2,15 @@ import { useState } from "react";
 import { toCamelCase } from "../utils";
 
 type Props = {
-  title: string,
-  unique: string,
-  mod?: number,
-  min?: number,
-  max?: number,
-  changeFn: any
-  value: number
-}
+  title: string;
+  unique: string;
+  mod?: number;
+  min?: number;
+  max?: number;
+  changeFn: any;
+  value: number;
+  isUnder: boolean;
+};
 
 export const NumericInput = ({
   title = "Fu",
@@ -18,7 +19,8 @@ export const NumericInput = ({
   min = 1,
   max = 5,
   changeFn,
-  value
+  value,
+  isUnder = false,
 }: Props) => {
   const uid = unique;
   const modText = mod < 0 ? `(${mod})` : mod > 0 ? `(+${mod})` : "";
@@ -26,35 +28,39 @@ export const NumericInput = ({
 
   const decrement = () => {
     if (value > min) {
-      changeFn('dec', uid)
+      changeFn("dec", uid);
     }
   };
 
   const increment = () => {
     if (value < max) {
-      changeFn('inc', uid)
+      changeFn("inc", uid);
     }
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseInt(e.target.value, 10) || min
-    changeFn(val, uid)
+    const val = parseInt(e.target.value, 10) || min;
+    changeFn(val, uid);
   };
 
   const onBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
     const clean = parseInt(e.target.value, 10);
     if (clean > max) {
-      changeFn(max, uid)
+      changeFn(max, uid);
     }
     if (clean < min) {
-      changeFn(min, uid)
+      changeFn(min, uid);
     }
   };
 
   return (
     <div className="block w-full mt-1">
       <label htmlFor={uid} className="w-full text-sm font-semibold">
-        <span className="sm:hidden">{uid}</span><span className="hidden sm:inline">{title} {abbrv}</span> {modText}
+        <span className="sm:hidden">{uid}</span>
+        <span className="hidden sm:inline">
+          {title} {abbrv}
+        </span>{" "}
+        {modText}
       </label>
       <div className="flex h-10 relative mt-1">
         <button
@@ -70,7 +76,7 @@ export const NumericInput = ({
           title={title}
           onChange={(e) => onChange(e)}
           onBlur={(e) => onBlur(e)}
-          className="w-full text-center"
+          className={`w-full text-center ${isUnder ? "text-red-700" : ""}`}
           name={uid}
         />
         <button

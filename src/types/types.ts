@@ -129,7 +129,7 @@ type SpeciesStats = {
   };
 };
 
-const speciesStat: Record<ValidSpecies, SpeciesStats> = {
+export const speciesStat: Record<ValidSpecies, SpeciesStats> = {
   [PlayerSpecies.TANQUE]: {
     v: 115,
     m: 60,
