@@ -66,7 +66,7 @@ export const NumericInput = ({
         <button
           onClick={decrement}
           title="increase"
-          className="flex items-center px-1 sm:px-2 md:px-4 lg:px-6 rounded"
+          className="flex items-center px-2 md:px-4 lg:px-6 rounded appearance-none"
         >
           <span className="text-xs">&#x25C0;</span>
         </button>
@@ -78,11 +78,12 @@ export const NumericInput = ({
           onBlur={(e) => onBlur(e)}
           className={`w-full text-center ${isUnder ? "text-red-700" : ""}`}
           name={uid}
+          disabled={true}
         />
         <button
           onClick={increment}
           title="decrease"
-          className="flex items-center px-1 sm:px-2 md:px-4 lg:px-6 rounded"
+          className="flex items-center px-2 md:px-4 lg:px-6 rounded appearance-none"
         >
           <span className="text-xs">&#x25B6;</span>
         </button>

@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { Dropdown } from "./components/Dropdown";
 import { NumericInput } from "./components/NumericInput";
 import { TextInput } from "./components/TextInput";
@@ -25,7 +25,7 @@ const langs = {
 const chosenLanguage = langs.esp;
 
 const initialState = {
-  charSpecies: PlayerSpecies.TANQUE,
+  charSpecies: PlayerSpecies.HUMANO,
   charClass: PlayerClasses.GUERRERO,
   charSubClass: PlayerSubClasses.BARBARO,
   charStats: {
@@ -69,6 +69,12 @@ function reducer(state, action) {
       return {
         ...state,
         charSubClass: action.payload,
+      };
+    }
+    case "RESET_STATS": {
+      return {
+        ...state,
+        charStats: { ...initialState.charStats },
       };
     }
     case "INCREASE_STAT": {
@@ -181,6 +187,82 @@ function App() {
     }
   };
 
+  // @ts-ignore
+  const [derivative, setDerivative] = useState({
+    golpe: 2,
+    golpe2m: 3,
+    maxTA: 2,
+    reflejos: 2,
+    reFisica: 2,
+    reMagica: 2,
+    reMental: 2,
+    magicTA: 0,
+  });
+
+  // @ts-ignore
+  const getFinalStat = (statName) => {
+    return (
+      state.charStats[statName] + getModifiersForCurrentSpecies()[statName]
+    );
+  };
+
+  const calculateDerivativeStats = () => {
+    const golpe = getFinalStat(Characteristics.FUERZA) * 2;
+    const golpe2m = Math.round(golpe * 1.5);
+    const maxTA = getFinalStat(Characteristics.RESISTENCIA) * 2;
+    const reflejos =
+      1 +
+      Math.round(
+        (getFinalStat(Characteristics.PERCEPCION) +
+          getFinalStat(Characteristics.INTUICION) +
+          getFinalStat(Characteristics.AGILIDAD)) /
+          4.5
+      );
+    const reFisica =
+      1 +
+      Math.round(
+        (getFinalStat(Characteristics.FUERZA) +
+          getFinalStat(Characteristics.RESISTENCIA)) /
+          3
+      );
+    const reMagica =
+      1 +
+      Math.round(
+        (getFinalStat(Characteristics.RAZON) +
+          getFinalStat(Characteristics.SABIDURIA)) /
+          3
+      );
+    const reMental =
+      1 +
+      Math.round(
+        (Math.max(
+          getFinalStat(Characteristics.RAZON),
+          getFinalStat(Characteristics.INTUICION),
+          getFinalStat(Characteristics.SABIDURIA)
+        ) +
+          getFinalStat(Characteristics.SABIDURIA)) /
+          3
+      );
+    const magicTA = Math.max(reMagica * 2 - 4, 0);
+    setDerivative({
+      golpe,
+      golpe2m,
+      maxTA,
+      reflejos,
+      reFisica,
+      reMagica,
+      reMental,
+      magicTA,
+    });
+  };
+
+  const resetStats = () => {
+    dispatch({
+      type: "RESET_STATS",
+      payload: null,
+    });
+  };
+
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
@@ -197,6 +279,12 @@ function App() {
           <pre>{JSON.stringify({ ...state, sum: sumOfStats }, null, 2)}</pre>
         </small> 
         */}
+        <div>
+          <TextInput
+            chosenLang={chosenLanguage}
+            initialValue={state.charName}
+          />
+        </div>
         <div className="flex space-x-4">
           <div className="w-1/3">
             <Dropdown
@@ -230,12 +318,6 @@ function App() {
               selection={state.charSubClass}
             />
           </div>
-        </div>
-        <div>
-          <TextInput
-            chosenLang={chosenLanguage}
-            initialValue={state.charName}
-          />
         </div>
         <div>
           <label htmlFor="limit">
@@ -282,15 +364,92 @@ function App() {
           })}
         </div>
         <div className="flex justify-center mt-4">
-          <button className="w-full px-4 py-2 text-white rounded">
-            Calculate
+          <button
+            className="w-full px-4 py-2 text-white rounded"
+            onClick={calculateDerivativeStats}
+          >
+            {["Calcular Stats", "Calculate Stats"][chosenLanguage]}
           </button>
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          <div className="block w-full mt-1">
+            <TextInput
+              chosenLang={chosenLanguage}
+              title={["Golpe", "Impact"]}
+              value={String(derivative.golpe)}
+              disabled={true}
+            />
+          </div>
+          <div className="block w-full mt-1">
+            <TextInput
+              chosenLang={chosenLanguage}
+              title={["Golpe A2M", "Impact 2H"]}
+              value={String(derivative.golpe2m)}
+              disabled={true}
+            />
+          </div>
+          <div className="block w-full mt-1">
+            <TextInput
+              chosenLang={chosenLanguage}
+              title={["Reflejos", "Reflex"]}
+              value={String(derivative.reflejos)}
+              disabled={true}
+            />
+          </div>
+          <div className="block w-full mt-1">
+            <TextInput
+              chosenLang={chosenLanguage}
+              title={["TA Magico", "Magic TA"]}
+              value={String(derivative.magicTA)}
+              disabled={true}
+            />
+          </div>
+          <div className="block w-full mt-1">
+            <TextInput
+              chosenLang={chosenLanguage}
+              title={["R. Fisica", "Physic R."]}
+              value={String(derivative.reFisica)}
+              disabled={true}
+            />
+          </div>
+          <div className="block w-full mt-1">
+            <TextInput
+              chosenLang={chosenLanguage}
+              title={["R. Magica", "Magic R."]}
+              value={String(derivative.reMagica)}
+              disabled={true}
+            />
+          </div>
+          <div className="block w-full mt-1">
+            <TextInput
+              chosenLang={chosenLanguage}
+              title={["R. Mental", "Mental R."]}
+              value={String(derivative.reMental)}
+              disabled={true}
+            />
+          </div>
+          <div className="block w-full mt-1">
+            <TextInput
+              chosenLang={chosenLanguage}
+              title={["Max TA", "Max TA"]}
+              value={String(derivative.maxTA)}
+              disabled={true}
+            />
+          </div>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="flex items-center justify-center px-4 py-3 text-gray-500 bg-gray-200">
         <div className="text-sm">© 2023 All rights reserved.</div>
+{/* 
+        <button
+          className="w-full px-4 py-2 text-white rounded"
+          onClick={calculateDerivativeStats}
+        >
+          {["Calcular Stats", "Calculate Stats"][chosenLanguage]}
+        </button>
+*/}
       </footer>
     </div>
   );
