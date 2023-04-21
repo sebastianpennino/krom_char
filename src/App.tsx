@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Dropdown } from "./components/Dropdown";
 import { NumericInput } from "./components/NumericInput";
 import { TextInput } from "./components/TextInput";
@@ -240,7 +240,7 @@ function App() {
           getFinalStat(Characteristics.INTUICION),
           getFinalStat(Characteristics.SABIDURIA)
         ) +
-          getFinalStat(Characteristics.SABIDURIA)) /
+          getFinalStat(Characteristics.VOLUNTAD)) /
           3
       );
     const magicTA = Math.max(reMagica * 2 - 4, 0);
@@ -262,6 +262,11 @@ function App() {
       payload: null,
     });
   };
+
+  useEffect(() => {
+    calculateDerivativeStats()
+  }, [state]);
+
 
   return (
     <div className="flex flex-col h-screen">
@@ -347,6 +352,14 @@ function App() {
             <option value="20">20</option>
           </select>
         </div>
+        <div className="flex justify-center mt-4">
+          <button
+            className="w-full px-4 py-2 text-white rounded"
+            onClick={resetStats}
+          >
+            {["Reset Stats", "Reset Stats"][chosenLanguage]}
+          </button>
+        </div>
         <div className="grid grid-cols-3 gap-4">
           {Object.entries(state.charStats).map(([key, val]: any) => {
             return (
@@ -362,14 +375,6 @@ function App() {
               />
             );
           })}
-        </div>
-        <div className="flex justify-center mt-4">
-          <button
-            className="w-full px-4 py-2 text-white rounded"
-            onClick={calculateDerivativeStats}
-          >
-            {["Calcular Stats", "Calculate Stats"][chosenLanguage]}
-          </button>
         </div>
         <div className="grid grid-cols-4 gap-4">
           <div className="block w-full mt-1">
