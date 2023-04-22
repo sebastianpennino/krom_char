@@ -32,46 +32,7 @@ export const characteristicsToName: Record<string, string[]> = {
   [Characteristics.PERCEPCION]: ["Percepcion", "Perception"],
   [Characteristics.VOLUNTAD]: ["Voluntad", "Willpower"],
 };
-/*
-export const characteristics = [
-  {
-    name: ["Fuerza", "Strength"],
-    formulaName: Characteristics.FUERZA,
-  },
-  {
-    name: ["Resistencia", "Fortitude"],
-    formulaName: Characteristics.RESISTENCIA,
-  },
-  {
-    name: ["Agilidad", "Agility"],
-    formulaName: Characteristics.AGILIDAD,
-  },
-  {
-    name: ["Razon", "Reasoning"],
-    formulaName: Characteristics.RAZON,
-  },
-  {
-    name: ["Intuicion", "Intuition"],
-    formulaName: Characteristics.INTUICION,
-  },
-  {
-    name: ["Sabiduria", "Knowledge"],
-    formulaName: Characteristics.SABIDURIA,
-  },
-  {
-    name: ["Social", "Social"],
-    formulaName: Characteristics.SOCIAL,
-  },
-  {
-    name: ["Percepcion", "Perception"],
-    formulaName: Characteristics.PERCEPCION,
-  },
-  {
-    name: ["Voluntad", "Willpower"],
-    formulaName: Characteristics.VOLUNTAD,
-  },
-];
-*/
+
 export enum PlayerClasses {
   ASESINO = "ASESINO",
   LADRON = "LADRON",
@@ -103,7 +64,7 @@ export enum PlayerSpecies {
   FEY = "FEY",
 }
 
-export type ValidSpecies =
+export type ValidPlayerSpecies =
   | PlayerSpecies.TANQUE
   | PlayerSpecies.ORCO
   | PlayerSpecies.FERAL
@@ -141,7 +102,7 @@ export const classStat: Record<
   [PlayerClasses.SHAMAN]: { v: -15, m: 40, a: 20 },
   [PlayerClasses.MAGO]: { v: -25, m: 60, a: 10 },
 };
-export const speciesStat: Record<ValidSpecies, SpeciesStats> = {
+export const speciesStat: Record<ValidPlayerSpecies, SpeciesStats> = {
   [PlayerSpecies.TANQUE]: {
     v: 115,
     m: 60,
@@ -287,6 +248,10 @@ export const species = [
   },
 ];
 
+export const translateSpecies = (formulaName: ValidPlayerSpecies, idx: number) => {
+  return species.find(c => c.formulaName === formulaName)?.name[idx]
+}
+
 export enum PlayerSubClasses {
   SICARIO = "SICARIO",
   ESPIA = "ESPIA",
@@ -327,131 +292,135 @@ export const subclasses: Subclass[] = [
   {
     dependsOn: PlayerClasses.ASESINO,
     formulaName: PlayerSubClasses.SICARIO,
-    name: ["Sicario", "-Sicario"],
+    name: ["Sicario", "Hitman"],
   },
   {
     dependsOn: PlayerClasses.ASESINO,
     formulaName: PlayerSubClasses.ESPIA,
-    name: ["Espia", "-Espia"],
+    name: ["Espia", "Spy"],
   },
 
   {
     dependsOn: PlayerClasses.LADRON,
     formulaName: PlayerSubClasses.PICARO,
-    name: ["Picaro", "-Picaro"],
+    name: ["Picaro", "Rogue"],
   },
   {
     dependsOn: PlayerClasses.LADRON,
     formulaName: PlayerSubClasses.PIRATA,
-    name: ["Pirata", "-Pirata"],
+    name: ["Pirata", "Pirate"],
   },
   {
     dependsOn: PlayerClasses.LADRON,
     formulaName: PlayerSubClasses.ESCAPISTA,
-    name: ["Escapita", "-Escapita"],
+    name: ["Escapista", "Escape Artist"],
   },
 
   {
     dependsOn: PlayerClasses.GUERRERO,
     formulaName: PlayerSubClasses.LUCHADOR,
-    name: ["Luchador", "-Luchador"],
+    name: ["Luchador", "Fighter"],
   },
   {
     dependsOn: PlayerClasses.GUERRERO,
     formulaName: PlayerSubClasses.BARBARO,
-    name: ["Barbaro", "-Barbaro"],
+    name: ["Barbaro", "Berserker"],
   },
   {
     dependsOn: PlayerClasses.GUERRERO,
     formulaName: PlayerSubClasses.CABALLERO,
-    name: ["Caballero", "-Caballero"],
+    name: ["Caballero", "Knight"],
   },
 
   {
     dependsOn: PlayerClasses.MONJE,
     formulaName: PlayerSubClasses.MARCIAL,
-    name: ["Marcial", "-Marcial"],
+    name: ["Marcial", "Martial Artist"],
   },
   {
     dependsOn: PlayerClasses.MONJE,
     formulaName: PlayerSubClasses.SANADOR,
-    name: ["Sanador", "-Sanador"],
+    name: ["Sanador", "Healer"],
   },
 
   {
     dependsOn: PlayerClasses.CAZADOR,
     formulaName: PlayerSubClasses.EXPLORADOR,
-    name: ["Explorador", "-Explorador"],
+    name: ["Explorador", "Explorer"],
   },
   {
     dependsOn: PlayerClasses.CAZADOR,
     formulaName: PlayerSubClasses.MONTARAZ,
-    name: ["Montaraz", "-Montaraz"],
+    name: ["Montaraz", "Ranger"],
   },
 
   {
     dependsOn: PlayerClasses.MAGO_GUERRERO,
     formulaName: PlayerSubClasses.PALADIN,
-    name: ["Paladin", "-Paladin"],
+    name: ["Paladin", "Paladin"],
   },
   {
     dependsOn: PlayerClasses.MAGO_GUERRERO,
     formulaName: PlayerSubClasses.SUPLICANTE_OSCURO,
-    name: ["Suplicante Oscuro", "-Suplicante Oscuro"],
+    name: ["Suplicante Oscuro", "Dark Acolyte"],
   },
   {
     dependsOn: PlayerClasses.MAGO_GUERRERO,
     formulaName: PlayerSubClasses.CAZAMAGOS,
-    name: ["Cazamagos", "-Cazamagos"],
+    name: ["Cazamagos", "Spellbreaker"],
   },
   {
     dependsOn: PlayerClasses.MAGO_GUERRERO,
     formulaName: PlayerSubClasses.ALQUIMISTA,
-    name: ["Alquimista", "-Alquimista"],
+    name: ["Alquimista", "Alchemist"],
   },
 
   {
     dependsOn: PlayerClasses.SHAMAN,
     formulaName: PlayerSubClasses.BRUJO,
-    name: ["Brujo", "-Brujo"],
+    name: ["Brujo", "Warlock"],
   },
   {
     dependsOn: PlayerClasses.SHAMAN,
     formulaName: PlayerSubClasses.CLERIGO,
-    name: ["Clerigo", "-Clerigo"],
+    name: ["Clerigo", "Cleric"],
   },
   {
     dependsOn: PlayerClasses.SHAMAN,
     formulaName: PlayerSubClasses.DRUIDA,
-    name: ["Druida", "-Druida"],
+    name: ["Druida", "Druid"],
   },
   {
     dependsOn: PlayerClasses.SHAMAN,
     formulaName: PlayerSubClasses.DEVASTADOR,
-    name: ["Devastador", "-Devastador"],
+    name: ["Devastador", "Bligther"],
   },
 
   {
     dependsOn: PlayerClasses.MAGO,
     formulaName: PlayerSubClasses.NIGROMANTE,
-    name: ["Nigromante", "-Nigromante"],
+    name: ["Nigromante", "Necromancer"],
   },
   {
     dependsOn: PlayerClasses.MAGO,
     formulaName: PlayerSubClasses.MAGO_VERDE,
-    name: ["Mago Verde", "-Mago Verde"],
+    name: ["Mago Verde", "Verdant Mage"],
   },
   {
     dependsOn: PlayerClasses.MAGO,
     formulaName: PlayerSubClasses.MAGO_ELEMENTAL,
-    name: ["Mago Elemental", "-Mago Elemental"],
+    name: ["Mago Elemental", "Elemental Mage"],
   },
   {
     dependsOn: PlayerClasses.MAGO,
     formulaName: PlayerSubClasses.PSIQUICO,
-    name: ["Psiquico", "-Psiquico"],
+    name: ["Psiquico", "Mentalist"],
   },
 ];
+
+export const translateSubclass = (formulaName: ValidPlayerSubClasses, idx: number) => {
+  return subclasses.find(c => c.formulaName === formulaName)?.name[idx]
+}
 
 export const classes = [
   {
@@ -487,6 +456,10 @@ export const classes = [
     formulaName: PlayerClasses.MAGO,
   },
 ];
+
+export const translateClass = (formulaName: ValidPlayerClasses, idx: number) => {
+  return classes.find(c => c.formulaName === formulaName)?.name[idx]
+}
 
 export const selectFirstSubClass = (playerClass: ValidPlayerClasses) => {
   return subclasses.find((subClass) => {

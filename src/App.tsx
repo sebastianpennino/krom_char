@@ -14,15 +14,20 @@ import {
   PlayerSubClasses,
   classStat,
   speciesStat,
+  translateClass,
+  translateSubclass,
+  translateSpecies,
 } from "./types/types";
 import { getRandomCharacterName } from "./utils";
+import FlagButton from "./components/FlagButton";
+import { ReactComponent as KromsysLogo } from './assets/k-logo.svg';
 
 const langs = {
   esp: 0,
   eng: 1,
 };
 
-const chosenLanguage = langs.esp;
+const defaultLang = langs.esp;
 
 const initialState = {
   charSpecies: PlayerSpecies.HUMANO,
@@ -127,6 +132,8 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const [choosenLang, setLang] = useState<number>(defaultLang)
 
   const sumLimit = state.sumLimit;
 
@@ -321,23 +328,20 @@ function App() {
     <div className="flex flex-col h-screen">
       {/* Header */}
       <header className="flex items-center justify-between px-4 py-3 bg-gray-900">
-        <div className="text-white">Logo</div>
-        <div className="text-white">Menu Icon</div>
+        <div className="text-white"><KromsysLogo /></div>
+        <div className="text-white"><FlagButton toggleFn={setLang} currentValue={choosenLang} /></div>
       </header>
 
       {/* Main Content */}
       <main className="flex-grow p-4 space-y-4">
-        {/* Visual Debug */}
-        {/* 
-        <small>
-          <pre>{JSON.stringify({ ...state, sum: sumOfStats }, null, 2)}</pre>
-        </small> 
-        */}
+      {/* <ReactLogo />
+      <UsaFlag /> */}
+
         {!state.showResults && (
           <>
             <div>
               <TextInput
-                chosenLang={chosenLanguage}
+                chosenLang={choosenLang}
                 value={state.charName}
                 disabled={true}
               />
@@ -347,7 +351,7 @@ function App() {
                 <Dropdown
                   title={["Especie", "Species"]}
                   options={species}
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   changeFn={changeSpecies}
                   selection={state.charSpecies}
                   disabled={state.showResults}
@@ -357,7 +361,7 @@ function App() {
                 <Dropdown
                   title={["Clase", "Class"]}
                   options={classes}
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   changeFn={changeClass}
                   selection={state.charClass}
                   disabled={state.showResults}
@@ -367,7 +371,7 @@ function App() {
                 <Dropdown
                   title={["Sub-Clase", "Sub-Class"]}
                   options={subclasses}
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   filterFn={(opt: any) => {
                     return (
                       opt.dependsOn ===
@@ -387,7 +391,7 @@ function App() {
                   [
                     "Limite de caracteristicas",
                     "Point limit for characteristics",
-                  ][chosenLanguage]
+                  ][choosenLang]
                 }
               </label>
               <select
@@ -415,7 +419,7 @@ function App() {
                 return (
                   <NumericInput
                     key={key}
-                    title={characteristicsToName[key][chosenLanguage]}
+                    title={characteristicsToName[key][choosenLang]}
                     unique={key}
                     changeFn={changeStats}
                     value={val}
@@ -429,7 +433,7 @@ function App() {
             </div>
             <div className="flex justify-center mt-4">
               <span>
-                ({["Puntos Restantes: ", "Remaining Points: "][chosenLanguage]}
+                ({["Puntos Restantes: ", "Remaining Points: "][choosenLang]}
                 {/* @ts-ignore */}
                 {state.sumLimit -
                   Object.entries(state.charStats).reduce((acc, stat) => {
@@ -444,15 +448,18 @@ function App() {
                 className="w-1/2 px-4 py-2 text-white rounded"
                 onClick={resetStats}
               >
-                {["Reset", "Reset"][chosenLanguage]}
+                {["Limpiar Puntos", "Reset Points"][choosenLang]}
               </button>
               <button
-                className="w-1/2 px-4 py-2 text-white rounded"
+                disabled={sumOfStats !== state.sumLimit}
+                className="w-1/2 px-4 py-2 text-white rounded disabled:opacity-50"
                 onClick={() => {
-                  changeResults(!state.showResults);
+                  if (sumOfStats === state.sumLimit) {
+                    changeResults(!state.showResults);
+                  }
                 }}
               >
-                {["Generar!", "Generate!"][chosenLanguage]}
+                {["Generar!", "Generate!"][choosenLang]}
               </button>
             </div>
           </>
@@ -467,13 +474,19 @@ function App() {
             </div>
             <div className="flex space-x-4">
               <div className="w-1/3 text-center bg-neutral-700">
-                {state.charSpecies}
+                {translateSpecies(
+                  state.charSpecies,
+                  choosenLang
+                )?.toUpperCase()}
               </div>
               <div className="w-1/3 text-center bg-neutral-700">
-                {state.charClass}
+                {translateClass(state.charClass, choosenLang)?.toUpperCase()}
               </div>
               <div className="w-1/3 text-center bg-neutral-700">
-                {state.charSubClass}
+                {translateSubclass(
+                  state.charSubClass,
+                  choosenLang
+                )?.toUpperCase()}
               </div>
             </div>
 
@@ -492,7 +505,7 @@ function App() {
             <div className="grid grid-cols-3 gap-4">
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["Golpe", "Impact"]}
                   value={String(derivative.golpe)}
                   disabled={true}
@@ -500,7 +513,7 @@ function App() {
               </div>
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["Golpe A2M", "2H Impact"]}
                   value={String(derivative.golpe2m)}
                   disabled={true}
@@ -508,7 +521,7 @@ function App() {
               </div>
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["Mistica", "Mystique"]}
                   value={String(derivative.mistica)}
                   disabled={true}
@@ -518,7 +531,7 @@ function App() {
             <div className="grid grid-cols-2 gap-4">
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["Max TA", "Max TA"]}
                   value={String(derivative.maxTA)}
                   disabled={true}
@@ -526,7 +539,7 @@ function App() {
               </div>
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["TA Magico", "Magic TA"]}
                   value={String(derivative.magicTA)}
                   disabled={true}
@@ -536,7 +549,7 @@ function App() {
             <div className="grid grid-cols-4 gap-4">
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["Reflejos", "Reflex"]}
                   value={String(derivative.reflejos)}
                   disabled={true}
@@ -545,7 +558,7 @@ function App() {
 
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["R. Fisica", "Physic R."]}
                   value={String(derivative.reFisica)}
                   disabled={true}
@@ -553,7 +566,7 @@ function App() {
               </div>
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["R. Magica", "Magic R."]}
                   value={String(derivative.reMagica)}
                   disabled={true}
@@ -561,7 +574,7 @@ function App() {
               </div>
               <div className="block w-full mt-1">
                 <TextInput
-                  chosenLang={chosenLanguage}
+                  chosenLang={choosenLang}
                   title={["R. Mental", "Mental R."]}
                   value={String(derivative.reMental)}
                   disabled={true}
@@ -572,11 +585,20 @@ function App() {
               <button
                 className="w-full px-4 py-2 text-white rounded"
                 onClick={() => {
-                  // resetStats();
                   changeResults(!state.showResults);
                 }}
               >
-                {["< Volver a empezar", "< Start over"][chosenLanguage]}
+                {["< Volver", "< Go Back"][choosenLang]}
+              </button>
+              <button
+                className="w-full px-4 py-2 text-white rounded"
+                onClick={() => {
+
+                  resetStats();
+                  changeResults(!state.showResults);
+                }}
+              >
+                {["Empezar de cero", "Start over"][choosenLang]}
               </button>
             </div>
           </>
@@ -585,7 +607,13 @@ function App() {
 
       {/* Footer */}
       <footer className="flex items-center justify-center px-4 py-3 text-gray-500 bg-gray-200">
-        <div className="text-sm">© 2023 All rights reserved.</div>
+        <div className="text-sm">
+          By{" "}
+          <a href="https://github.com/sebastianpennino" about="_blank">
+            Sebastian
+          </a>{" "}
+          - 2023
+        </div>
       </footer>
     </div>
   );
