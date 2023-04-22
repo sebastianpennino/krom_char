@@ -197,6 +197,7 @@ function App() {
     reMagica: 2,
     reMental: 2,
     magicTA: 0,
+    mistica: 3,
   });
 
   // @ts-ignore
@@ -244,6 +245,20 @@ function App() {
           3
       );
     const magicTA = Math.max(reMagica * 2 - 4, 0);
+    const mistica =
+      Math.max(
+        getFinalStat(Characteristics.RAZON),
+        getFinalStat(Characteristics.INTUICION),
+        getFinalStat(Characteristics.SABIDURIA)
+      ) +
+      Math.round(
+        [
+          getFinalStat(Characteristics.RAZON),
+          getFinalStat(Characteristics.INTUICION),
+          getFinalStat(Characteristics.SABIDURIA),
+        ].sort((a, b) => b - a)[1] / 2
+      );
+
     setDerivative({
       golpe,
       golpe2m,
@@ -253,6 +268,7 @@ function App() {
       reMagica,
       reMental,
       magicTA,
+      mistica,
     });
   };
 
@@ -264,9 +280,8 @@ function App() {
   };
 
   useEffect(() => {
-    calculateDerivativeStats()
+    calculateDerivativeStats();
   }, [state]);
-
 
   return (
     <div className="flex flex-col h-screen">
@@ -376,6 +391,15 @@ function App() {
             );
           })}
         </div>
+        <div className="flex justify-center mt-4">
+          <span>
+            (Puntos restantes:{" "}
+            {/* @ts-ignore */}
+            {state.sumLimit - Object.entries(state.charStats).reduce((acc, stat) => {
+              return acc + stat[1] as number;
+            }, 0)})
+          </span>
+        </div>
         <div className="grid grid-cols-4 gap-4">
           <div className="block w-full mt-1">
             <TextInput
@@ -388,8 +412,8 @@ function App() {
           <div className="block w-full mt-1">
             <TextInput
               chosenLang={chosenLanguage}
-              title={["Golpe A2M", "Impact 2H"]}
-              value={String(derivative.golpe2m)}
+              title={["Mistica", "Mystique"]}
+              value={String(derivative.mistica)}
               disabled={true}
             />
           </div>
@@ -447,7 +471,7 @@ function App() {
       {/* Footer */}
       <footer className="flex items-center justify-center px-4 py-3 text-gray-500 bg-gray-200">
         <div className="text-sm">© 2023 All rights reserved.</div>
-{/* 
+        {/* 
         <button
           className="w-full px-4 py-2 text-white rounded"
           onClick={calculateDerivativeStats}
