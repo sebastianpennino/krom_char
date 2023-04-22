@@ -327,8 +327,9 @@ function App() {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3 bg-gray-900">
+      <header className="flex items-center justify-between px-4 py-2 bg-stone-950">
         <div className="text-white"><KromsysLogo /></div>
+        <div><h1 className="text-sm">Kromsys Character Creator</h1></div>
         <div className="text-white"><FlagButton toggleFn={setLang} currentValue={choosenLang} /></div>
       </header>
 
@@ -606,7 +607,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="flex items-center justify-center px-4 py-3 text-gray-500 bg-gray-200">
+      <footer className="flex items-center justify-center px-4 py-3 text-gray-500 bg-stone-900">
         <div className="text-sm">
           By{" "}
           <a href="https://github.com/sebastianpennino" about="_blank">
