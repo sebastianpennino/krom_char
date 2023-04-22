@@ -1,3 +1,15 @@
+import { PlayerSpecies } from "./types/types";
+import {
+  genericNames,
+  elfNames,
+  orcNames,
+  humanNames,
+  feyNames,
+  tritonNames,
+  graniteNames,
+  wolfmanNames,
+} from "./utils/names";
+
 export function toCamelCase(phrase: string): string {
   return phrase
     .toLowerCase()
@@ -12,49 +24,34 @@ export function removeNonLettersHyphensUnderscores(text: string): string {
   return String(text).replace(/[^a-zA-Z-_]+/g, "");
 }
 
-export function getRandomCharacterName(): string {
-  const names = [
-    "Elvandar",
-    "Nimrodel",
-    "Arandor",
-    "Faelivrin",
-    "Eldamar",
-    "Caelondia",
-    "Thalassia",
-    "Galadrielle",
-    "Earendil",
-    "Celeborn",
-    "Aurelian",
-    "Alatar",
-    "Eruanna",
-    "Lorieniel",
-    "Elrosiel",
-    "Calenloth",
-    "Eolande",
-    "Vardaessa",
-    "Thranduil",
-    "Eowynne",
-    "Amrothos",
-    "Glorfindel",
-    "Luthien",
-    "Elessar",
-    "Galathil",
-    "Ardalambion",
-    "Fingolfin",
-    "Eolair",
-    "Arien",
-    "Aranthir",
-    "Arodion",
-    "Cirdan",
-    "Finrod",
-    "Gwindor",
-    "Ingwion",
-    "Melian",
-    "Mithrandir",
-    "Radagast",
-    "Saruman",
-    "Ulmo",
-  ];
-  const name = names[Math.floor(Math.random() * names.length)];
-  return name;
+export function getRandomCharacterName(species = ""): string {
+  let nameList = genericNames;
+
+  switch (species) {
+    case PlayerSpecies.HUMANO:
+      nameList = [...humanNames];
+      break;
+    case PlayerSpecies.ELFO:
+      nameList = [...elfNames];
+      break;
+    case PlayerSpecies.FERAL:
+      nameList = [...wolfmanNames];
+      break;
+    case PlayerSpecies.FEY:
+      nameList = [...feyNames];
+      break;
+    case PlayerSpecies.ORCO:
+      nameList = [...orcNames];
+      break;
+    case PlayerSpecies.TANQUE:
+      nameList = [...graniteNames];
+      break;
+    case PlayerSpecies.TRENO:
+      nameList = [...tritonNames];
+      break;
+    default:
+      nameList = [...genericNames];
+  }
+
+  return nameList[Math.floor(Math.random() * nameList.length)];
 }

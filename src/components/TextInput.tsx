@@ -7,7 +7,7 @@ export const TextInput = ({
   chosenLang = 0,
   initialValue = "",
   disabled = false,
-  value = ""
+  value = "",
 }) => {
   const [internValue, setValue] = useState<string>(initialValue);
   const id = toCamelCase(title[chosenLang]);
@@ -18,9 +18,8 @@ export const TextInput = ({
 
   return (
     <>
-      <label htmlFor={id}>
-        <span className="sm:hidden text-sm">{title[chosenLang]}</span>
-        <span className="hidden sm:inline text-sm">{title[chosenLang]}</span>
+      <label htmlFor={id} className="text-sm">
+        <span className="block text-center">{title[chosenLang]}</span>
       </label>
       <input
         id={id}

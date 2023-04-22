@@ -23,6 +23,7 @@ type Props = {
   filterFn?: (options: opt) => boolean;
   changeFn: any;
   selection: any;
+  disabled: boolean;
 };
 
 export const Dropdown = ({
@@ -32,6 +33,7 @@ export const Dropdown = ({
   filterFn,
   changeFn,
   selection,
+  disabled=false
 }: Props) => {
   const cleanTitle = Array.isArray(title) ? title[chosenLang] : "Dropdown";
   const id = toCamelCase(cleanTitle);
@@ -54,6 +56,7 @@ export const Dropdown = ({
         className="block w-full mt-1"
         onChange={(e) => onChange(e)}
         value={selection}
+        disabled={disabled}
       >
         {cleanOpts.map((opt) => {
           return (

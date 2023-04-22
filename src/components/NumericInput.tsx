@@ -10,6 +10,7 @@ type Props = {
   changeFn: any;
   value: number;
   isUnder: boolean;
+  disabled: boolean;
 };
 
 export const NumericInput = ({
@@ -21,6 +22,7 @@ export const NumericInput = ({
   changeFn,
   value,
   isUnder = false,
+  disabled = false
 }: Props) => {
   const uid = unique;
   const modText = mod < 0 ? `(${mod})` : mod > 0 ? `(+${mod})` : "";
@@ -78,7 +80,7 @@ export const NumericInput = ({
           onBlur={(e) => onBlur(e)}
           className={`w-full text-center ${isUnder ? "text-red-700" : ""}`}
           name={uid}
-          disabled={true}
+          disabled={disabled}
         />
         <button
           onClick={increment}

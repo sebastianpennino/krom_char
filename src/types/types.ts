@@ -128,7 +128,19 @@ type SpeciesStats = {
     [Characteristics.VOLUNTAD]: -1 | 0 | 1;
   };
 };
-
+export const classStat: Record<
+  ValidPlayerClasses,
+  { v: number; m: number; a: number }
+> = {
+  [PlayerClasses.ASESINO]: { v: 15, m: -10, a: 40 },
+  [PlayerClasses.LADRON]: { v: -15, m: 0, a: 60 },
+  [PlayerClasses.GUERRERO]: { v: 30, m: -25, a: 40 },
+  [PlayerClasses.MONJE]: { v: 25, m: 10, a: 10 },
+  [PlayerClasses.CAZADOR]: { v: 5, m: 20, a: 20 },
+  [PlayerClasses.MAGO_GUERRERO]: { v: 20, m: 20, a: 5 },
+  [PlayerClasses.SHAMAN]: { v: -15, m: 40, a: 20 },
+  [PlayerClasses.MAGO]: { v: -25, m: 60, a: 10 },
+};
 export const speciesStat: Record<ValidSpecies, SpeciesStats> = {
   [PlayerSpecies.TANQUE]: {
     v: 115,
@@ -303,7 +315,7 @@ export enum PlayerSubClasses {
 }
 
 type ValidPlayerSubClasses =
-  typeof PlayerSubClasses[keyof typeof PlayerSubClasses];
+  (typeof PlayerSubClasses)[keyof typeof PlayerSubClasses];
 
 type Subclass = {
   name: string[];
