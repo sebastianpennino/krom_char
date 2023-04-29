@@ -56,7 +56,7 @@ const getItemStyle = (
 const getListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
   background: isDraggingOver ? "lightblue" : "lightgrey",
   padding: `${grid}px`,
-  width: 250,
+  width: '100%',
 });
 
 const App: React.FC = () => {
@@ -85,6 +85,7 @@ const App: React.FC = () => {
             {...provided.droppableProps}
             ref={provided.innerRef}
             style={getListStyle(snapshot.isDraggingOver)}
+            className="border border-red-500 w-full"
           >
             {items.map((item: Item, index: number) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -100,6 +101,7 @@ const App: React.FC = () => {
                       snapshot.isDragging,
                       provided.draggableProps.style
                     )}
+                    className="border border-blue-500"
                   >
                     {item.content}
                   </div>
