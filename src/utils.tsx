@@ -55,3 +55,34 @@ export function getRandomCharacterName(species = ""): string {
 
   return nameList[Math.floor(Math.random() * nameList.length)];
 }
+
+export const calculateFormula = (
+  formula: string,
+  values: Record<string, number>,
+  round?: boolean
+): number => {
+  // Replace each variable in the formula with its corresponding value
+  const replacedFormula = formula.replace(/[A-Za-z]+/g, (match) => {
+    const variable = match.trim();
+    if (values.hasOwnProperty(variable)) {
+      return values[variable].toString();
+    }
+    return match; // If the variable is not found, leave it unchanged
+  });
+
+  try {
+    // Evaluate the formula using eval()
+    const result = eval(replacedFormula);
+    if (typeof result === "number" && !isNaN(result)) {
+      if (round) {
+        return Math.round(result);
+      }
+      return result;
+    }
+  } catch (error) {
+    // Handle any errors that occur during evaluation
+    console.error("Error evaluating the formula:", error);
+  }
+
+  return -1; // Return -1 if the formula is invalid or the evaluation fails
+};
