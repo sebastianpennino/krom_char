@@ -1,18 +1,24 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { DragDropContext, Draggable } from "react-beautiful-dnd";
-import { StrictModeDroppable as Droppable } from "./utils/StrictModeDroppable";
+import React, { Component } from 'react';
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  DraggableProvided,
+  DraggableStateSnapshot,
+  DroppableProvided,
+  DroppableStateSnapshot
+} from 'react-beautiful-dnd';
+import { StrictModeDroppable as Droppable } from "./utils/StrictModeDroppable"
 
-// fake data generator
-const getItems = (count) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
+// Fake data generator
+const getItems = (count: number) =>
+  Array.from({ length: count }, (_, k) => ({
     id: `item-${k}`,
     content: `item ${k}`,
   }));
 
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
+// A little function to help us with reordering the result
+const reorder = <T extends any>(list: T[], startIndex: number, endIndex: number): T[] => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -22,27 +28,36 @@ const reorder = (list, startIndex, endIndex) => {
 
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
-  padding: grid * 2,
+interface Item {
+  id: string;
+  content: string;
+}
+
+interface AppState {
+  items: Item[];
+}
+
+const getItemStyle = (isDragging: boolean, draggableStyle: any): React.CSSProperties => ({
+  // Some basic styles to make the items look a bit nicer
+  userSelect: 'none',
+  padding: `${grid * 2}px`,
   margin: `0 0 ${grid}px 0`,
 
-  // change background colour if dragging
-  background: isDragging ? "lightgreen" : "grey",
+  // Change background colour if dragging
+  background: isDragging ? 'lightgreen' : 'grey',
 
-  // styles we need to apply on draggables
+  // Styles we need to apply on draggables
   ...draggableStyle,
 });
 
-const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid,
+const getListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
+  background: isDraggingOver ? 'lightblue' : 'lightgrey',
+  padding: `${grid}px`,
   width: 250,
 });
 
-class App extends Component {
-  constructor(props) {
+class App extends Component<{}, AppState> {
+  constructor(props: {}) {
     super(props);
     this.state = {
       items: getItems(10),
@@ -50,13 +65,13 @@ class App extends Component {
     this.onDragEnd = this.onDragEnd.bind(this);
   }
 
-  onDragEnd(result) {
-    // dropped outside the list
+  onDragEnd(result: DropResult) {
+    // Dropped outside the list
     if (!result.destination) {
       return;
     }
 
-    const items = reorder(
+    const items = reorder<Item>(
       this.state.items,
       result.source.index,
       result.destination.index
@@ -68,20 +83,20 @@ class App extends Component {
   }
 
   // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
+  // But in this example, everything is done in one place for simplicity.
   render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
+          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
               style={getListStyle(snapshot.isDraggingOver)}
             >
-              {this.state.items.map((item, index) => (
+              {this.state.items.map((item: Item, index: number) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
+                  {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
@@ -105,5 +120,4 @@ class App extends Component {
   }
 }
 
-// Put the thing into the DOM!
 export default App;
