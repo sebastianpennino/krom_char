@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -6,9 +6,9 @@ import {
   DraggableProvided,
   DraggableStateSnapshot,
   DroppableProvided,
-  DroppableStateSnapshot
-} from 'react-beautiful-dnd';
-import { StrictModeDroppable as Droppable } from "./utils/StrictModeDroppable"
+  DroppableStateSnapshot,
+} from "react-beautiful-dnd";
+import { StrictModeDroppable as Droppable } from "./utils/StrictModeDroppable";
 
 // Fake data generator
 const getItems = (count: number) =>
@@ -18,7 +18,11 @@ const getItems = (count: number) =>
   }));
 
 // A little function to help us with reordering the result
-const reorder = <T extends any>(list: T[], startIndex: number, endIndex: number): T[] => {
+const reorder = <T extends any>(
+  list: T[],
+  startIndex: number,
+  endIndex: number
+): T[] => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -33,91 +37,81 @@ interface Item {
   content: string;
 }
 
-interface AppState {
-  items: Item[];
-}
-
-const getItemStyle = (isDragging: boolean, draggableStyle: any): React.CSSProperties => ({
+const getItemStyle = (
+  isDragging: boolean,
+  draggableStyle: any
+): React.CSSProperties => ({
   // Some basic styles to make the items look a bit nicer
-  userSelect: 'none',
+  userSelect: "none",
   padding: `${grid * 2}px`,
   margin: `0 0 ${grid}px 0`,
 
   // Change background colour if dragging
-  background: isDragging ? 'lightgreen' : 'grey',
+  background: isDragging ? "lightgreen" : "grey",
 
   // Styles we need to apply on draggables
   ...draggableStyle,
 });
 
 const getListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
+  background: isDraggingOver ? "lightblue" : "lightgrey",
   padding: `${grid}px`,
   width: 250,
 });
 
-class App extends Component<{}, AppState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      items: getItems(10),
-    };
-    this.onDragEnd = this.onDragEnd.bind(this);
-  }
+const App: React.FC = () => {
+  const [items, setItems] = useState<Item[]>(() => getItems(10));
 
-  onDragEnd(result: DropResult) {
+  const onDragEnd = (result: DropResult) => {
     // Dropped outside the list
     if (!result.destination) {
       return;
     }
 
-    const items = reorder<Item>(
-      this.state.items,
+    const updatedItems = reorder(
+      items,
       result.source.index,
       result.destination.index
     );
 
-    this.setState({
-      items,
-    });
-  }
+    setItems(updatedItems);
+  };
 
-  // Normally you would want to split things out into separate components.
-  // But in this example, everything is done in one place for simplicity.
-  render() {
-    return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
-            >
-              {this.state.items.map((item: Item, index: number) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}
-                    >
-                      {item.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    );
-  }
-}
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable">
+        {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            style={getListStyle(snapshot.isDraggingOver)}
+          >
+            {items.map((item: Item, index: number) => (
+              <Draggable key={item.id} draggableId={item.id} index={index}>
+                {(
+                  provided: DraggableProvided,
+                  snapshot: DraggableStateSnapshot
+                ) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={getItemStyle(
+                      snapshot.isDragging,
+                      provided.draggableProps.style
+                    )}
+                  >
+                    {item.content}
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
+};
 
 export default App;
