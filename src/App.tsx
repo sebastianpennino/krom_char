@@ -12,6 +12,7 @@ import FlagButton from "./components/FlagButton";
 import { ReactComponent as KromsysLogo } from "./assets/k-logo.svg";
 import { ResultsPage } from "./compositions/ResultPage";
 import { InputPage } from "./compositions/InputPage";
+import { PlayerSkillPacks } from "./types/skills";
 
 const langs = {
   esp: 0,
@@ -38,6 +39,7 @@ const initialState = {
   charName: getRandomCharacterName(),
   sumLimit: 32,
   showResults: false,
+  charSkillPack: PlayerSkillPacks.NOBLE
 };
 
 // @ts-ignore
@@ -47,6 +49,12 @@ function reducer(state, action) {
       return {
         ...state,
         sumLimit: action.payload,
+      };
+    }
+    case "SELECT_SKILLPACK": {
+      return {
+        ...state,
+        charSkillPack: action.payload,
       };
     }
     case "SELECT_SPECIES": {

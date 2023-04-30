@@ -1,4 +1,5 @@
 import { TextInput } from "../components/TextInput";
+import { allSkillPacks, allSkills } from "../types/skills";
 import {
   translateSpecies,
   translateClass,
@@ -6,6 +7,7 @@ import {
   classStat,
   speciesStat,
 } from "../types/types";
+import { calculateFormula } from "../utils";
 
 type Props = {
   state: any;
@@ -33,6 +35,47 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
       );
     }
     return 0;
+  };
+
+  const getSkillListWithInitialValue = (
+    selectedSkillPackName: string,
+    values: any
+  ): Array<{ skillName: string[]; skillValue: number }> => {
+    let rst = [
+      {
+        skillName: ["???","???"],
+        skillValue: 2,
+      },
+    ];
+    const foundSkillPack = allSkillPacks.find((skillpack) => {
+      return skillpack.formulaName === selectedSkillPackName;
+    });
+
+    if (foundSkillPack) {
+      const { skillList } = foundSkillPack;
+
+      rst = skillList.map((skill) => {
+        const foundSkill = allSkills.find((sk) => {
+          return sk.formulaName === skill;
+        });
+        if (foundSkill) {
+          return {
+            skillName: foundSkill.name,
+            skillValue: calculateFormula(
+              foundSkill.initialValFormula,
+              values,
+              true
+            ),
+          };
+        }
+        // default if not found
+        return {
+          skillName: ["?","?"],
+          skillValue: 2,
+        };
+      });
+    }
+    return rst;
   };
 
   return (
@@ -66,6 +109,7 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
         </div>
       </div>
 
+      <h2 className="text-center text-xl text-yellow-500">{["Derivadas", "Derivatives"][choosenLang]}</h2>
       <div className="grid grid-cols-3 gap-4">
         <div className="block w-full mt-1">
           <TextInput
@@ -145,6 +189,26 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
           />
         </div>
       </div>
+
+      <h2 className="text-center text-xl text-yellow-500">{["Habilidades", "Skills"][choosenLang]}</h2>
+      <div className="grid grid-cols-2 gap-4">
+        {getSkillListWithInitialValue(state.charSkillPack, state.charStats).map(
+          (result) => {
+            return (
+              <div className="block w-full mt-1">
+                <TextInput
+                  title={result.skillName}
+                  chosenLang={choosenLang}
+                  value={String(result.skillValue)}
+                  disabled={true}
+                />
+              </div>
+            );
+          }
+        )}
+      </div>
+
+      <div className="h-15 w-full bg-transparent"></div>
     </>
   );
 };

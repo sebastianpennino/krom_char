@@ -1,13 +1,14 @@
+import { useEffect, useState } from "react";
 import { Dropdown } from "../components/Dropdown";
 import { NumericInput } from "../components/NumericInput";
 import { TextInput } from "../components/TextInput";
+import { allSkillPacks, calculateSKillpackValue } from "../types/skills";
 import {
   species,
   classes,
   subclasses,
   PlayerClasses,
   characteristicsToName,
-  Characteristics,
 } from "../types/types";
 
 type Props = {
@@ -28,6 +29,12 @@ export const InputPage = ({
 }: Props) => {
   const sumLimit = state.sumLimit;
 
+  const changeSkillpack = (newValue: any) => {
+    dispatch({
+      type: "SELECT_SKILLPACK",
+      payload: newValue,
+    });
+  };
   const changeSpecies = (newValue: any) => {
     dispatch({
       type: "SELECT_SPECIES",
@@ -69,6 +76,12 @@ export const InputPage = ({
       });
     }
   };
+
+  const [calcValue, setCalcValue] = useState([0, 0])
+
+  useEffect(()=>{
+    setCalcValue(calculateSKillpackValue(state.charSkillPack))
+  },[state.charSkillPack])
 
   return (
     <>
@@ -116,34 +129,41 @@ export const InputPage = ({
           />
         </div>
       </div>
-
-      <div>
-        <label htmlFor="limit">
-          {
-            ["Limite de caracteristicas", "Point limit for characteristics"][
-              choosenLang
-            ]
-          }
-        </label>
-        <select
-          id="limit"
-          className="block w-full mt-1"
-          onChange={(e) => {
-            dispatch({
-              type: "CHANGE_LIMIT",
-              payload: parseInt(e.target.value, 10) || 20,
-            });
-          }}
-          defaultValue={state.sumLimit}
-        >
-          <option value="45">Max</option>
-          <option value="32">32</option>
-          <option value="28">28</option>
-          <option value="26">26</option>
-          <option value="24">24</option>
-          <option value="22">22</option>
-          <option value="20">20</option>
-        </select>
+      <div className="flex space-x-4">
+        <div className="w-1/2">
+          <Dropdown
+            title={[`Skillpack (${calcValue[1]})`, `Skillpack (${calcValue[1]})`]}
+            options={allSkillPacks}
+            chosenLang={choosenLang}
+            changeFn={changeSkillpack}
+            selection={state.charSkillPack}
+            disabled={false}
+          />
+        </div>
+        <div className="w-1/2">
+          <label htmlFor="limit">
+            {['Puntos Max.', 'Max. Points'][choosenLang]}
+          </label>
+          <select
+            id="limit"
+            className="block w-full mt-1"
+            onChange={(e) => {
+              dispatch({
+                type: "CHANGE_LIMIT",
+                payload: parseInt(e.target.value, 10) || 20,
+              });
+            }}
+            defaultValue={state.sumLimit}
+          >
+            <option value="45">Max</option>
+            <option value="32">32</option>
+            <option value="28">28</option>
+            <option value="26">26</option>
+            <option value="24">24</option>
+            <option value="22">22</option>
+            <option value="20">20</option>
+          </select>
+        </div>
       </div>
       <div className="grid grid-cols-3 gap-4">
         {Object.entries(state.charStats).map(([key, val]: any) => {
@@ -174,6 +194,8 @@ export const InputPage = ({
           )
         </span>
       </div>
+
+      {/* <div className="h-15 w-full bg-transparent"></div> */}
     </>
   );
 };

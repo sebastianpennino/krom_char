@@ -1,4 +1,4 @@
-const initialValueFormulas = {
+export const initialValueFormulas = {
   percepcion: "1 + (Intu + Per) / 3",
   comunicacion: "1 + (Ra + Sab) / 3",
   influenciaDirecta: "1 + (Soc + Vo) / 3",
@@ -133,16 +133,17 @@ enum PlayerSkills {
   POESIA = "poesía",
 }
 
-type ValidPlayerSkills = (typeof PlayerSkills)[keyof typeof PlayerSkills];
+export type ValidPlayerSkills =
+  (typeof PlayerSkills)[keyof typeof PlayerSkills];
 
-type Skill = {
+export type Skill = {
   formulaName: ValidPlayerSkills;
   name: string[];
   initialValFormula: string;
   rank: number;
 };
 
-const allSkills: Skill[] = [
+export const allSkills: Skill[] = [
   {
     formulaName: PlayerSkills.LEER_Y_ESCRIBIR,
     name: ["Leer y escribir", "Read and write"],
@@ -247,7 +248,7 @@ const allSkills: Skill[] = [
   },
   {
     formulaName: PlayerSkills.RESISTIR_PERSUACION,
-    name: ["Resistir persuasión", "Resisting persuasion"],
+    name: ["Res. persuasión", "Res. persuasion"],
     initialValFormula: initialValueFormulas.autocontrol,
     rank: 2,
   },
@@ -367,7 +368,7 @@ const allSkills: Skill[] = [
   },
   {
     formulaName: PlayerSkills.MALABARES_Y_FLORITURAS,
-    name: ["Malabares y florituras", "Juggling and flourishes"],
+    name: ["Florituras", "Flourishes"],
     initialValFormula: initialValueFormulas.unique.florituras,
     rank: 1,
   },
@@ -439,7 +440,7 @@ const allSkills: Skill[] = [
   },
   {
     formulaName: PlayerSkills.CARRERA_DE_LARGA_DISTANCIA,
-    name: ["Carrera de larga distancia", "Long-distance running"],
+    name: ["Carrera", "Running"],
     initialValFormula: initialValueFormulas.atletismoRes,
     rank: 3,
   },
@@ -493,7 +494,7 @@ const allSkills: Skill[] = [
   },
   {
     formulaName: PlayerSkills.AGILIDAD_MANUAL,
-    name: ["Agilidad manual (prestidigitación)", "Sleight of hand"],
+    name: ["Agilidad manual", "Sleight of hand"],
     initialValFormula: initialValueFormulas.subterfugioDef,
     rank: 3,
   },
@@ -554,8 +555,8 @@ const allSkills: Skill[] = [
   {
     formulaName: PlayerSkills.BUSQUEDA_URBANA,
     name: [
-      "Búsqueda urbana / Instinto callejero",
-      "Urban scouting / Street smarts",
+      "Búsq urb./Inst. callej.",
+      "Street smarts",
     ],
     initialValFormula: initialValueFormulas.unique.busquedaUrbana,
     rank: 2,
@@ -688,7 +689,7 @@ const allSkills: Skill[] = [
   },
 ];
 
-enum PlayerSkillPacks {
+export enum PlayerSkillPacks {
   NOBLE = "NOBLE",
   ACADEMICO = "ACADEMICO",
   HERBORISTA = "HERBORISTA",
@@ -707,16 +708,16 @@ enum PlayerSkillPacks {
   INFILTRADOR = "INFILTRADOR",
 }
 
-type ValidPlayerSkillPacks =
+export type ValidPlayerSkillPacks =
   (typeof PlayerSkillPacks)[keyof typeof PlayerSkillPacks];
 
-type SkillPack = {
+export type SkillPack = {
   skillList: ValidPlayerSkills[];
   name: string[];
   formulaName: ValidPlayerSkillPacks;
 };
 
-const allSkillPacks: SkillPack[] = [
+export const allSkillPacks: SkillPack[] = [
   {
     skillList: [
       PlayerSkills.ETIQUETA,
@@ -842,6 +843,7 @@ const allSkillPacks: SkillPack[] = [
     skillList: [
       PlayerSkills.TASACION,
       PlayerSkills.INSTINTO_CALLEJERO,
+      PlayerSkills.BUSQUEDA_URBANA,
       PlayerSkills.LEYES_COMERCIALES,
       PlayerSkills.SOBORNO,
       PlayerSkills.ORATORIA,
@@ -895,7 +897,7 @@ const allSkillPacks: SkillPack[] = [
       PlayerSkills.TACTICAS_DE_COMBATE,
       PlayerSkills.HERALDICA,
       // PlayerSkills.INSTINTO_CALLEJERO,
-      PlayerSkills.BUSQUEDA_URBANA
+      PlayerSkills.BUSQUEDA_URBANA,
     ],
     name: ["Marinero", "Sailor"],
     formulaName: PlayerSkillPacks.MARINERO,
@@ -960,3 +962,33 @@ const allSkillPacks: SkillPack[] = [
     formulaName: PlayerSkillPacks.INFILTRADOR,
   },
 ];
+
+export const calculateSKillpackValue = (
+  SkillPackName: string
+): [number, number] => {
+  const found = allSkillPacks.find((skillpack) => {
+    return skillpack.formulaName === SkillPackName;
+  });
+  if (found) {
+    const { skillList } = found;
+    const skillPackValue = skillList.reduce((sum, currentSkillName) => {
+      const match = allSkills.find((skill) => {
+        return skill.formulaName === currentSkillName;
+      });
+      return sum + (match?.rank || 0);
+    }, 0);
+    return [skillPackValue, skillList.length];
+  }
+  return [0, 0];
+};
+
+export const calculateSKillpackValueV2 = (skillpack: SkillPack): number => {
+  const { skillList } = skillpack;
+  const skillPackValue = skillList.reduce((sum, currentSkillName) => {
+    const match = allSkills.find((skill) => {
+      return skill.formulaName === currentSkillName;
+    });
+    return sum + (match?.rank || 0);
+  }, 0);
+  return skillPackValue;
+};
