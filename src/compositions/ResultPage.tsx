@@ -1,18 +1,13 @@
 import { TextInput } from "../components/TextInput";
-import { ValidCharacteristics } from "../types/Characteristics";
-import {
-  ValidPlayerClasses,
-  classStat,
-  translateClass,
-  translateSubclass,
-} from "../types/Classes";
-import { allSkillPacks } from "../types/SkillPacks";
-import { allSkills } from "../types/Skills";
+import { ValidCharacteristics } from "../typings/Characteristics";
+import { ValidPlayerClasses, classStat, translateClass, translateSubclass } from "../typings/Classes";
+import { allSkillPacks } from "../typings/SkillPacks";
+import { allSkills } from "../typings/Skills";
 import {
   ValidPlayerSpecies,
   speciesStat,
   translateSpecies,
-} from "../types/Species";
+} from "../typings/Species";
 import { calculateFormula } from "../utils";
 
 type Props = {

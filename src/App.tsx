@@ -1,14 +1,14 @@
 import { Reducer, useEffect, useReducer, useState } from "react";
-import { Characteristics, ValidCharacteristics } from "./types/Characteristics";
+import { Characteristics, ValidCharacteristics } from "./typings/Characteristics";
 import { getRandomCharacterName } from "./utils";
 import FlagButton from "./components/FlagButton";
 import { ReactComponent as KromsysLogo } from "./assets/k-logo.svg";
 import { ResultsPage } from "./compositions/ResultPage";
 import { InputPage } from "./compositions/InputPage";
 import { AppAction, CharacterAction, characterReducer } from "./reducers/characterReducer";
-import { PlayerSpecies, ValidPlayerSpecies, speciesStat } from "./types/Species";
-import { PlayerClasses, PlayerSubClasses, ValidPlayerClasses, ValidPlayerSubClasses } from "./types/Classes";
-import { PlayerSkillPacks, ValidPlayerSkillPacks } from "./types/SkillPacks";
+import { PlayerSpecies, ValidPlayerSpecies, speciesStat } from "./typings/Species";
+import { PlayerClasses, PlayerSubClasses, ValidPlayerClasses, ValidPlayerSubClasses } from "./typings/Classes";
+import { PlayerSkillPacks, ValidPlayerSkillPacks } from "./typings/SkillPacks";
 
 const langs = {
   esp: 0,

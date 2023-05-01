@@ -1,6 +1,6 @@
 import { AppState, initialState } from "../App";
-import { ValidCharacteristics } from "../types/Characteristics";
-import { selectFirstSubClass } from "../types/Classes";
+import { ValidCharacteristics } from "../typings/Characteristics";
+import { selectFirstSubClass } from "../typings/Classes";
 import { getRandomCharacterName } from "../utils";
 
 export enum CharacterAction {

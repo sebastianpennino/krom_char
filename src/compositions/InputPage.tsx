@@ -2,14 +2,11 @@ import { useEffect, useState } from "react";
 import { Dropdown } from "../components/Dropdown";
 import { NumericInput } from "../components/NumericInput";
 import { TextInput } from "../components/TextInput";
-import {
-  ValidCharacteristics,
-  characteristicsToName,
-} from "../types/Characteristics";
-import { species } from "../types/Species";
-import { classes, subclasses, PlayerClasses } from "../types/Classes";
-import { calculateSKillpackValue, allSkillPacks } from "../types/SkillPacks";
 import { CharacterAction } from "../reducers/characterReducer";
+import { characteristicsToName, ValidCharacteristics } from "../typings/Characteristics";
+import { classes, subclasses, PlayerClasses } from "../typings/Classes";
+import { calculateSKillpackValue, allSkillPacks } from "../typings/SkillPacks";
+import { species } from "../typings/Species";
 
 type Props = {
   state: any;
