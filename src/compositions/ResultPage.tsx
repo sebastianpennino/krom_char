@@ -1,4 +1,5 @@
 import { TextInput } from "../components/TextInput";
+import { ValidCharacteristics } from "../types/Characteristics";
 import {
   ValidPlayerClasses,
   classStat,
@@ -37,43 +38,37 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
 
   const getSkillListWithInitialValue = (
     selectedSkillPackName: string,
-    values: any
-  ): Array<{ skillName: string[]; skillValue: number }> => {
-    let rst = [
-      {
-        skillName: ["???", "???"],
-        skillValue: 2,
-      },
-    ];
-    const foundSkillPack = allSkillPacks.find((skillpack) => {
-      return skillpack.formulaName === selectedSkillPackName;
-    });
+    values: Record<ValidCharacteristics, number>
+  ): { skillName: string[]; skillValue: number }[] => {
+    const defaultSkill: { skillName: string[]; skillValue: number } = {
+      skillName: ["?", "?"],
+      skillValue: 2,
+    };
 
-    if (foundSkillPack) {
-      const { skillList } = foundSkillPack;
-
-      rst = skillList.map((skill) => {
-        const foundSkill = allSkills.find((sk) => {
-          return sk.formulaName === skill;
-        });
-        if (foundSkill) {
-          return {
-            skillName: foundSkill.name,
-            skillValue: calculateFormula(
-              foundSkill.initialValFormula,
-              values,
-              true
-            ),
-          };
-        }
-        // default if not found
-        return {
-          skillName: ["?", "?"],
-          skillValue: 2,
-        };
-      });
+    const foundSkillPack = allSkillPacks.find(
+      (skillpack) => skillpack.formulaName === selectedSkillPackName
+    );
+    if (!foundSkillPack) {
+      return [defaultSkill];
     }
-    return rst;
+  
+    return foundSkillPack.skillList.map((skill) => {
+      const foundSkill = allSkills.find((sk) => sk.formulaName === skill);
+  
+      if (foundSkill) {
+        const skillValue = calculateFormula(
+          foundSkill.initialValFormula,
+          values,
+          true
+        );
+        return {
+          skillName: foundSkill.name,
+          skillValue,
+        };
+      }
+  
+      return defaultSkill;
+    });
   };
 
   return (

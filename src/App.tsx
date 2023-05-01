@@ -49,15 +49,13 @@ export const initialState: AppState = {
   charSkillPack: PlayerSkillPacks.NOBLE,
 };
 
-
-
 function App() {
   const [state, dispatch] = useReducer<Reducer<AppState, AppAction>>(characterReducer, initialState);
 
   const [choosenLang, setLang] = useState<number>(defaultLang);
 
   const sumOfStats = Object.entries(state.charStats).reduce((acc, el) => {
-    const [key, val] = el as [string, number];
+    const [_key, val] = el as [string, number];
     return acc + val;
   }, 0);
 
@@ -87,15 +85,7 @@ function App() {
     }
     // In case of error return something
     return {
-      [Characteristics.FUERZA]: -1,
-      [Characteristics.RESISTENCIA]: -1,
-      [Characteristics.AGILIDAD]: -1,
-      [Characteristics.RAZON]: -1,
-      [Characteristics.INTUICION]: -1,
-      [Characteristics.SABIDURIA]: -1,
-      [Characteristics.SOCIAL]: -1,
-      [Characteristics.PERCEPCION]: -1,
-      [Characteristics.VOLUNTAD]: -1,
+      ...initialState.charStats
     };
   };
 
