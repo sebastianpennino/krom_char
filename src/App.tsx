@@ -1,18 +1,14 @@
-import { useEffect, useReducer, useState } from "react";
-import {
-  PlayerClasses,
-  Characteristics,
-  selectFirstSubClass,
-  PlayerSpecies,
-  PlayerSubClasses,
-  speciesStat,
-} from "./types/types";
+import { Reducer, useEffect, useReducer, useState } from "react";
+import { Characteristics, ValidCharacteristics } from "./types/Characteristics";
 import { getRandomCharacterName } from "./utils";
 import FlagButton from "./components/FlagButton";
 import { ReactComponent as KromsysLogo } from "./assets/k-logo.svg";
 import { ResultsPage } from "./compositions/ResultPage";
 import { InputPage } from "./compositions/InputPage";
-import { PlayerSkillPacks } from "./types/skills";
+import { AppAction, CharacterAction, characterReducer } from "./reducers/characterReducer";
+import { PlayerSpecies, ValidPlayerSpecies, speciesStat } from "./types/Species";
+import { PlayerClasses, PlayerSubClasses, ValidPlayerClasses, ValidPlayerSubClasses } from "./types/Classes";
+import { PlayerSkillPacks, ValidPlayerSkillPacks } from "./types/SkillPacks";
 
 const langs = {
   esp: 0,
@@ -21,7 +17,18 @@ const langs = {
 
 const defaultLang = langs.esp;
 
-const initialState = {
+export type AppState = {
+  charSpecies?: ValidPlayerSpecies,
+  charClass?: ValidPlayerClasses,
+  charSubClass?: ValidPlayerSubClasses,
+  charStats: Record<ValidCharacteristics, number>,
+  charName: string,
+  sumLimit: number,
+  showResults: boolean,
+  charSkillPack: ValidPlayerSkillPacks
+}
+
+export const initialState: AppState = {
   charSpecies: PlayerSpecies.HUMANO,
   charClass: PlayerClasses.GUERRERO,
   charSubClass: PlayerSubClasses.BARBARO,
@@ -39,98 +46,13 @@ const initialState = {
   charName: getRandomCharacterName(),
   sumLimit: 32,
   showResults: false,
-  charSkillPack: PlayerSkillPacks.NOBLE
+  charSkillPack: PlayerSkillPacks.NOBLE,
 };
 
-// @ts-ignore
-function reducer(state, action) {
-  switch (action.type) {
-    case "CHANGE_LIMIT": {
-      return {
-        ...state,
-        sumLimit: action.payload,
-      };
-    }
-    case "SELECT_SKILLPACK": {
-      return {
-        ...state,
-        charSkillPack: action.payload,
-      };
-    }
-    case "SELECT_SPECIES": {
-      return {
-        ...state,
-        charName: getRandomCharacterName(action.payload),
-        charSpecies: action.payload,
-      };
-    }
-    case "SELECT_CLASS": {
-      return {
-        ...state,
-        charClass: action.payload,
-        charSubClass: selectFirstSubClass(action.payload),
-      };
-    }
-    case "SELECT_SUB_CLASS": {
-      return {
-        ...state,
-        charSubClass: action.payload,
-      };
-    }
-    case "RESET_STATS": {
-      return {
-        ...state,
-        charStats: { ...initialState.charStats },
-      };
-    }
-    case "INCREASE_STAT": {
-      const newStats = {
-        ...state.charStats,
-        [action.payload]: state.charStats[action.payload] + 1,
-      };
-      return {
-        ...state,
-        charStats: newStats,
-      };
-    }
-    case "DECREASE_STAT": {
-      const newStats = {
-        ...state.charStats,
-        [action.payload]: state.charStats[action.payload] - 1,
-      };
-      return {
-        ...state,
-        charStats: newStats,
-      };
-    }
-    case "CHANGE_STAT": {
-      const charStats = {
-        ...state.charStats,
-        [action.payload.statName]: action.payload.val,
-      };
-      return {
-        ...state,
-        charStats,
-      };
-    }
-    case "CHANGE_NAME": {
-      return {
-        ...state,
-        charName: action.payload,
-      };
-    }
-    case "TOGGLE_RESULTS": {
-      return {
-        ...state,
-        showResults: action.payload,
-      };
-    }
-  }
-  throw Error("Unknown action: " + action.type);
-}
+
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer<Reducer<AppState, AppAction>>(characterReducer, initialState);
 
   const [choosenLang, setLang] = useState<number>(defaultLang);
 
@@ -141,12 +63,11 @@ function App() {
 
   const changeResults = (change: boolean) => {
     dispatch({
-      type: "TOGGLE_RESULTS",
+      type: CharacterAction.TOGGLE_RESULTS,
       payload: change,
     });
   };
 
-  // @ts-ignore
   const [derivative, setDerivative] = useState({
     golpe: 2,
     golpe2m: 3,
@@ -160,11 +81,11 @@ function App() {
   });
 
   const getModifiersForCurrentSpecies = () => {
-    // @ts-ignore
-    if (speciesStat[state.charSpecies]) {
-      // @ts-ignore
-      return speciesStat[state.charSpecies].mods;
+    const cleanSpecies = state.charSpecies as ValidPlayerSpecies
+    if (speciesStat[cleanSpecies]) {
+      return speciesStat[cleanSpecies].mods;
     }
+    // In case of error return something
     return {
       [Characteristics.FUERZA]: -1,
       [Characteristics.RESISTENCIA]: -1,
@@ -178,8 +99,7 @@ function App() {
     };
   };
 
-  // @ts-ignore
-  const getFinalStat = (statName) => {
+  const getFinalStat = (statName: ValidCharacteristics) => {
     return (
       state.charStats[statName] + getModifiersForCurrentSpecies()[statName]
     );
@@ -252,7 +172,7 @@ function App() {
 
   const resetStats = () => {
     dispatch({
-      type: "RESET_STATS",
+      type: CharacterAction.RESET_STATS,
       payload: null,
     });
   };
@@ -264,7 +184,7 @@ function App() {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-2 bg-stone-950">
+      <header className="flex items-center justify-between px-4 py-2 bg-stone-950 sticky top-0">
         <div className="text-white">
           <KromsysLogo />
         </div>

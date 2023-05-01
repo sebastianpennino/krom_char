@@ -1,4 +1,4 @@
-import { PlayerSpecies } from "./types/types";
+import { PlayerSpecies } from "./types/Species";
 import {
   genericNames,
   elfNames,

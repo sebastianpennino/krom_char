@@ -1,12 +1,17 @@
 import { TextInput } from "../components/TextInput";
-import { allSkillPacks, allSkills } from "../types/skills";
 import {
-  translateSpecies,
+  ValidPlayerClasses,
+  classStat,
   translateClass,
   translateSubclass,
-  classStat,
+} from "../types/Classes";
+import { allSkillPacks } from "../types/SkillPacks";
+import { allSkills } from "../types/Skills";
+import {
+  ValidPlayerSpecies,
   speciesStat,
-} from "../types/types";
+  translateSpecies,
+} from "../types/Species";
 import { calculateFormula } from "../utils";
 
 type Props = {
@@ -18,20 +23,13 @@ type Props = {
 // The result page shows all the choices made in the previous screen
 export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
   const getFinalSources = (source: "v" | "m" | "a") => {
-    // @ts-ignore
-    if (
-      // @ts-ignore
-      speciesStat[state.charSpecies] &&
-      // @ts-ignore
-      classStat[state.charClass] &&
-      source
-    ) {
-      // @ts-ignore
+    const cleanCharSpecies = state.charSpecies as ValidPlayerSpecies;
+    const cleanCharClass = state.charClass as ValidPlayerClasses;
+
+    if (speciesStat[cleanCharSpecies] && classStat[cleanCharClass] && source) {
       return (
-        // @ts-ignore
-        speciesStat[state.charSpecies][source] +
-        // @ts-ignore
-        classStat[state.charClass][source]
+        speciesStat[cleanCharSpecies][source] +
+        classStat[cleanCharClass][source]
       );
     }
     return 0;
@@ -43,7 +41,7 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
   ): Array<{ skillName: string[]; skillValue: number }> => {
     let rst = [
       {
-        skillName: ["???","???"],
+        skillName: ["???", "???"],
         skillValue: 2,
       },
     ];
@@ -70,7 +68,7 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
         }
         // default if not found
         return {
-          skillName: ["?","?"],
+          skillName: ["?", "?"],
           skillValue: 2,
         };
       });
@@ -109,7 +107,9 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
         </div>
       </div>
 
-      <h2 className="text-center text-xl text-yellow-500">{["Derivadas", "Derivatives"][choosenLang]}</h2>
+      <h2 className="text-center text-xl text-yellow-500">
+        {["Derivadas", "Derived Stats"][choosenLang]}
+      </h2>
       <div className="grid grid-cols-3 gap-4">
         <div className="block w-full mt-1">
           <TextInput
@@ -190,12 +190,19 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
         </div>
       </div>
 
-      <h2 className="text-center text-xl text-yellow-500">{["Habilidades", "Skills"][choosenLang]}</h2>
+      <h2 className="text-center text-xl text-yellow-500">
+        {["Habilidades", "Skills"][choosenLang]}
+      </h2>
       <div className="grid grid-cols-2 gap-4">
         {getSkillListWithInitialValue(state.charSkillPack, state.charStats).map(
           (result) => {
             return (
-              <div className="block w-full mt-1">
+              <div
+                className="block w-full mt-1"
+                key={`${result.skillName[0]
+                  .replace(/\W/g, "")
+                  .substring(0, 8)}`}
+              >
                 <TextInput
                   title={result.skillName}
                   chosenLang={choosenLang}

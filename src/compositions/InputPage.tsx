@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Dropdown } from "../components/Dropdown";
 import { NumericInput } from "../components/NumericInput";
 import { TextInput } from "../components/TextInput";
-import { allSkillPacks, calculateSKillpackValue } from "../types/skills";
 import {
-  species,
-  classes,
-  subclasses,
-  PlayerClasses,
+  ValidCharacteristics,
   characteristicsToName,
-} from "../types/types";
+} from "../types/Characteristics";
+import { species } from "../types/Species";
+import { classes, subclasses, PlayerClasses } from "../types/Classes";
+import { calculateSKillpackValue, allSkillPacks } from "../types/SkillPacks";
+import { CharacterAction } from "../reducers/characterReducer";
 
 type Props = {
   state: any;
@@ -31,25 +31,25 @@ export const InputPage = ({
 
   const changeSkillpack = (newValue: any) => {
     dispatch({
-      type: "SELECT_SKILLPACK",
+      type: CharacterAction.SELECT_SKILLPACK,
       payload: newValue,
     });
   };
   const changeSpecies = (newValue: any) => {
     dispatch({
-      type: "SELECT_SPECIES",
+      type: CharacterAction.SELECT_SPECIES,
       payload: newValue,
     });
   };
   const changeClass = (newValue: any) => {
     dispatch({
-      type: "SELECT_CLASS",
+      type: CharacterAction.SELECT_CLASS,
       payload: newValue,
     });
   };
   const changeSubClass = (newValue: any) => {
     dispatch({
-      type: "SELECT_SUB_CLASS",
+      type: CharacterAction.SELECT_SUB_CLASS,
       payload: newValue,
     });
   };
@@ -58,30 +58,30 @@ export const InputPage = ({
     if (sumOfStats < sumLimit) {
       if (newValue === "inc") {
         return dispatch({
-          type: "INCREASE_STAT",
+          type: CharacterAction.INCREASE_STAT,
           payload: statName,
         });
       }
     }
     if (newValue === "dec") {
       return dispatch({
-        type: "DECREASE_STAT",
+        type: CharacterAction.DECREASE_STAT,
         payload: statName,
       });
     }
     if (typeof newValue === "number") {
       return dispatch({
-        type: "CHANGE_STAT",
+        type: CharacterAction.CHANGE_STAT,
         payload: { val: newValue, statName },
       });
     }
   };
 
-  const [calcValue, setCalcValue] = useState([0, 0])
+  const [calcValue, setCalcValue] = useState([0, 0]);
 
-  useEffect(()=>{
-    setCalcValue(calculateSKillpackValue(state.charSkillPack))
-  },[state.charSkillPack])
+  useEffect(() => {
+    setCalcValue(calculateSKillpackValue(state.charSkillPack));
+  }, [state.charSkillPack]);
 
   return (
     <>
@@ -132,7 +132,10 @@ export const InputPage = ({
       <div className="flex space-x-4">
         <div className="w-1/2">
           <Dropdown
-            title={[`Skillpack (${calcValue[1]})`, `Skillpack (${calcValue[1]})`]}
+            title={[
+              `Skillpack (${calcValue[1]})`,
+              `Skillpack (${calcValue[1]})`,
+            ]}
             options={allSkillPacks}
             chosenLang={choosenLang}
             changeFn={changeSkillpack}
@@ -142,14 +145,14 @@ export const InputPage = ({
         </div>
         <div className="w-1/2">
           <label htmlFor="limit">
-            {['Puntos Max.', 'Max. Points'][choosenLang]}
+            {["Puntos Max.", "Max. Points"][choosenLang]}
           </label>
           <select
             id="limit"
             className="block w-full mt-1"
             onChange={(e) => {
               dispatch({
-                type: "CHANGE_LIMIT",
+                type: CharacterAction.CHANGE_LIMIT,
                 payload: parseInt(e.target.value, 10) || 20,
               });
             }}
@@ -170,7 +173,9 @@ export const InputPage = ({
           return (
             <NumericInput
               key={key}
-              title={characteristicsToName[key][choosenLang]}
+              title={
+                characteristicsToName[key as ValidCharacteristics][choosenLang]
+              }
               unique={key}
               changeFn={changeStats}
               value={val}
@@ -185,17 +190,15 @@ export const InputPage = ({
       <div className="flex justify-center mt-4">
         <span>
           ({["Puntos Restantes: ", "Remaining Points: "][choosenLang]}
-          {/* @ts-ignore */}
           {state.sumLimit -
             Object.entries(state.charStats).reduce((acc, stat) => {
-              // @ts-ignore
-              return (acc + stat[1]) as number;
+              return acc + (stat[1] as unknown as number);
             }, 0)}
           )
         </span>
       </div>
 
-      {/* <div className="h-15 w-full bg-transparent"></div> */}
+      <div className="h-15 w-full bg-transparent"></div>
     </>
   );
 };

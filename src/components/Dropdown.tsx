@@ -2,12 +2,12 @@ import { toCamelCase } from "../utils";
 
 const defaultOptions = [
   {
-    name: ["Tanque", "Tank-esque"],
-    formulaName: "ROCK",
+    name: ["Test-1", "Test-1-eng"],
+    formulaName: "TEST1",
   },
   {
-    name: ["Orco", "Orc"],
-    formulaName: "ORCO",
+    name: ["Test-2", "Test-2-eng"],
+    formulaName: "TEST2",
   },
 ];
 
