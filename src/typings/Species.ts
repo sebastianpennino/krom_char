@@ -147,7 +147,7 @@ export const speciesStat: Record<ValidPlayerSpecies, SpeciesStats> = {
 
 export const species = [
   {
-    name: ["Tanque", "Tank-esque"],
+    name: ["Rocosos", "Rocky"],
     formulaName: PlayerSpecies.TANQUE,
   },
   {
@@ -171,7 +171,7 @@ export const species = [
     formulaName: PlayerSpecies.ELFO,
   },
   {
-    name: ["Magica Full", "Magic Full"],
+    name: ["Draconido", "Draconid"],
     formulaName: PlayerSpecies.FEY,
   },
 ];

@@ -1,13 +1,29 @@
 import { Reducer, useEffect, useReducer, useState } from "react";
-import { Characteristics, ValidCharacteristics } from "./typings/Characteristics";
+import {
+  Characteristics,
+  ValidCharacteristics,
+} from "./typings/Characteristics";
 import { getRandomCharacterName } from "./utils";
 import FlagButton from "./components/FlagButton";
 import { ReactComponent as KromsysLogo } from "./assets/k-logo.svg";
 import { ResultsPage } from "./compositions/ResultPage";
 import { InputPage } from "./compositions/InputPage";
-import { AppAction, CharacterAction, characterReducer } from "./reducers/characterReducer";
-import { PlayerSpecies, ValidPlayerSpecies, speciesStat } from "./typings/Species";
-import { PlayerClasses, PlayerSubClasses, ValidPlayerClasses, ValidPlayerSubClasses } from "./typings/Classes";
+import {
+  AppAction,
+  CharacterAction,
+  characterReducer,
+} from "./reducers/characterReducer";
+import {
+  PlayerSpecies,
+  ValidPlayerSpecies,
+  speciesStat,
+} from "./typings/Species";
+import {
+  PlayerClasses,
+  PlayerSubClasses,
+  ValidPlayerClasses,
+  ValidPlayerSubClasses,
+} from "./typings/Classes";
 import { PlayerSkillPacks, ValidPlayerSkillPacks } from "./typings/SkillPacks";
 
 const langs = {
@@ -18,15 +34,15 @@ const langs = {
 const defaultLang = langs.esp;
 
 export type AppState = {
-  charSpecies?: ValidPlayerSpecies,
-  charClass?: ValidPlayerClasses,
-  charSubClass?: ValidPlayerSubClasses,
-  charStats: Record<ValidCharacteristics, number>,
-  charName: string,
-  sumLimit: number,
-  showResults: boolean,
-  charSkillPack: ValidPlayerSkillPacks
-}
+  charSpecies?: ValidPlayerSpecies;
+  charClass?: ValidPlayerClasses;
+  charSubClass?: ValidPlayerSubClasses;
+  charStats: Record<ValidCharacteristics, number>;
+  charName: string;
+  sumLimit: number;
+  showResults: boolean;
+  charSkillPack: ValidPlayerSkillPacks;
+};
 
 export const initialState: AppState = {
   charSpecies: PlayerSpecies.HUMANO,
@@ -50,7 +66,10 @@ export const initialState: AppState = {
 };
 
 function App() {
-  const [state, dispatch] = useReducer<Reducer<AppState, AppAction>>(characterReducer, initialState);
+  const [state, dispatch] = useReducer<Reducer<AppState, AppAction>>(
+    characterReducer,
+    initialState
+  );
 
   const [choosenLang, setLang] = useState<number>(defaultLang);
 
@@ -79,13 +98,13 @@ function App() {
   });
 
   const getModifiersForCurrentSpecies = () => {
-    const cleanSpecies = state.charSpecies as ValidPlayerSpecies
+    const cleanSpecies = state.charSpecies as ValidPlayerSpecies;
     if (speciesStat[cleanSpecies]) {
       return speciesStat[cleanSpecies].mods;
     }
     // In case of error return something
     return {
-      ...initialState.charStats
+      ...initialState.charStats,
     };
   };
 
@@ -99,14 +118,12 @@ function App() {
     const golpe = getFinalStat(Characteristics.FUERZA) * 2;
     const golpe2m = Math.round(golpe * 1.5);
     const maxTA = getFinalStat(Characteristics.RESISTENCIA) * 2;
-    const reflejos =
-      1 +
-      Math.round(
-        (getFinalStat(Characteristics.PERCEPCION) +
-          getFinalStat(Characteristics.INTUICION) +
-          getFinalStat(Characteristics.AGILIDAD)) /
-          4.5
-      );
+    const reflejos = Math.round(
+      (getFinalStat(Characteristics.PERCEPCION) +
+        getFinalStat(Characteristics.INTUICION) +
+        getFinalStat(Characteristics.AGILIDAD)) /
+        4.5
+    );
     const reFisica =
       1 +
       Math.round(
