@@ -1,9 +1,8 @@
 export enum PlayerClasses {
-  ASESINO = "ASESINO",
-  LADRON = "LADRON",
+  RUFIAN = "RUFIAN",
   GUERRERO = "GUERRERO",
   MONJE = "MONJE",
-  CAZADOR = "CAZADOR",
+  EXPLORADOR = "EXPLORADOR",
   MAGO_GUERRERO = "MAGO_GUERRERO",
   SHAMAN = "SHAMAN",
   MAGO = "MAGO",
@@ -16,11 +15,10 @@ export const classStat: Record<
   ValidPlayerClasses,
   { v: number; m: number; a: number }
 > = {
-  [PlayerClasses.ASESINO]: { v: 15, m: -10, a: 40 },
-  [PlayerClasses.LADRON]: { v: -15, m: 0, a: 60 },
+  [PlayerClasses.RUFIAN]: { v: -5, m: 0, a: 50 },
   [PlayerClasses.GUERRERO]: { v: 30, m: -25, a: 40 },
   [PlayerClasses.MONJE]: { v: 25, m: 10, a: 10 },
-  [PlayerClasses.CAZADOR]: { v: 5, m: 20, a: 20 },
+  [PlayerClasses.EXPLORADOR]: { v: 5, m: 20, a: 20 },
   [PlayerClasses.MAGO_GUERRERO]: { v: 20, m: 20, a: 5 },
   [PlayerClasses.SHAMAN]: { v: -15, m: 40, a: 20 },
   [PlayerClasses.MAGO]: { v: -25, m: 60, a: 10 },
@@ -28,25 +26,20 @@ export const classStat: Record<
 
 export enum PlayerSubClasses {
   SICARIO = "SICARIO",
-  ESPIA = "ESPIA",
-  PICARO = "PICARO",
+  LADRON = "LADRON",
   PIRATA = "PIRATA",
-  ESCAPISTA = "ESCAPISTA",
-  LUCHADOR = "LUCHADOR",
+  DUELISTA = "DUELISTA",
   BARBARO = "BARBARO",
   CABALLERO = "CABALLERO",
   MARCIAL = "MARCIAL",
   SANADOR = "SANADOR",
-  EXPLORADOR = "EXPLORADOR",
   MONTARAZ = "MONTARAZ",
   PALADIN = "PALADIN",
   SUPLICANTE_OSCURO = "SUPLICANTE",
   CAZAMAGOS = "CAZAMAGOS",
-  ALQUIMISTA = "ALQUIMISTA",
   BRUJO = "BRUJO",
   CLERIGO = "CLERIGO",
   DRUIDA = "DRUIDA",
-  DEVASTADOR = "DEVASTADOR",
   NIGROMANTE = "NIGROMANTE",
   MAGO_VERDE = "MAGO_VERDE",
   MAGO_ELEMENTAL = "MAGO_ELEMENTAL",
@@ -64,36 +57,25 @@ export type Subclass = {
 
 export const subclasses: Subclass[] = [
   {
-    dependsOn: PlayerClasses.ASESINO,
-    formulaName: PlayerSubClasses.SICARIO,
-    name: ["Sicario", "Hitman"],
-  },
-  {
-    dependsOn: PlayerClasses.ASESINO,
-    formulaName: PlayerSubClasses.ESPIA,
-    name: ["Espia", "Spy"],
-  },
-
-  {
-    dependsOn: PlayerClasses.LADRON,
-    formulaName: PlayerSubClasses.PICARO,
-    name: ["Picaro", "Rogue"],
-  },
-  {
-    dependsOn: PlayerClasses.LADRON,
+    dependsOn: PlayerClasses.RUFIAN,
     formulaName: PlayerSubClasses.PIRATA,
     name: ["Pirata", "Pirate"],
   },
   {
-    dependsOn: PlayerClasses.LADRON,
-    formulaName: PlayerSubClasses.ESCAPISTA,
-    name: ["Escapista", "Escape Artist"],
+    dependsOn: PlayerClasses.RUFIAN,
+    formulaName: PlayerSubClasses.SICARIO,
+    name: ["Sicario", "Assasin"],
+  },
+  {
+    dependsOn: PlayerClasses.RUFIAN,
+    formulaName: PlayerSubClasses.LADRON,
+    name: ["Ladron", "Thief"],
   },
 
   {
     dependsOn: PlayerClasses.GUERRERO,
-    formulaName: PlayerSubClasses.LUCHADOR,
-    name: ["Luchador", "Fighter"],
+    formulaName: PlayerSubClasses.DUELISTA,
+    name: ["Duelista", "Duelist"],
   },
   {
     dependsOn: PlayerClasses.GUERRERO,
@@ -118,12 +100,7 @@ export const subclasses: Subclass[] = [
   },
 
   {
-    dependsOn: PlayerClasses.CAZADOR,
-    formulaName: PlayerSubClasses.EXPLORADOR,
-    name: ["Explorador", "Explorer"],
-  },
-  {
-    dependsOn: PlayerClasses.CAZADOR,
+    dependsOn: PlayerClasses.EXPLORADOR,
     formulaName: PlayerSubClasses.MONTARAZ,
     name: ["Montaraz", "Ranger"],
   },
@@ -141,18 +118,13 @@ export const subclasses: Subclass[] = [
   {
     dependsOn: PlayerClasses.MAGO_GUERRERO,
     formulaName: PlayerSubClasses.CAZAMAGOS,
-    name: ["Cazamagos", "Spellbreaker"],
-  },
-  {
-    dependsOn: PlayerClasses.MAGO_GUERRERO,
-    formulaName: PlayerSubClasses.ALQUIMISTA,
-    name: ["Alquimista", "Alchemist"],
+    name: ["Cazamagos", "Magehunter"],
   },
 
   {
     dependsOn: PlayerClasses.SHAMAN,
     formulaName: PlayerSubClasses.BRUJO,
-    name: ["Brujo", "Warlock"],
+    name: ["Brujo", "Witch"],
   },
   {
     dependsOn: PlayerClasses.SHAMAN,
@@ -163,11 +135,6 @@ export const subclasses: Subclass[] = [
     dependsOn: PlayerClasses.SHAMAN,
     formulaName: PlayerSubClasses.DRUIDA,
     name: ["Druida", "Druid"],
-  },
-  {
-    dependsOn: PlayerClasses.SHAMAN,
-    formulaName: PlayerSubClasses.DEVASTADOR,
-    name: ["Devastador", "Bligther"],
   },
 
   {
@@ -188,7 +155,7 @@ export const subclasses: Subclass[] = [
   {
     dependsOn: PlayerClasses.MAGO,
     formulaName: PlayerSubClasses.PSIQUICO,
-    name: ["Psiquico", "Mentalist"],
+    name: ["Psiquico", "Psychic"],
   },
 ];
 
@@ -198,12 +165,8 @@ export const translateSubclass = (formulaName: ValidPlayerSubClasses, idx: numbe
 
 export const classes = [
   {
-    name: ["Asesino", "Assasin"],
-    formulaName: PlayerClasses.ASESINO,
-  },
-  {
-    name: ["Ladron", "Thief"],
-    formulaName: PlayerClasses.LADRON,
+    name: ["Rufian", "Ruffian"],
+    formulaName: PlayerClasses.RUFIAN,
   },
   {
     name: ["Guerrero", "Warrior"],
@@ -214,8 +177,8 @@ export const classes = [
     formulaName: PlayerClasses.MONJE,
   },
   {
-    name: ["Cazador", "Hunter"],
-    formulaName: PlayerClasses.CAZADOR,
+    name: ["Explorador", "Explorer"],
+    formulaName: PlayerClasses.EXPLORADOR,
   },
   {
     name: ["M-Guerrero", "W-Mage"],

@@ -117,7 +117,7 @@ export const InputPage = ({
             chosenLang={choosenLang}
             filterFn={(opt: any) => {
               return (
-                opt.dependsOn === (state.charClass || PlayerClasses.ASESINO)
+                opt.dependsOn === (state.charClass || PlayerClasses.RUFIAN)
               );
             }}
             changeFn={changeSubClass}
