@@ -59,13 +59,25 @@ export function getRandomCharacterName(species = ""): string {
 export const calculateFormula = (
   formula: string,
   values: Record<string, number>,
-  round?: boolean
+  round: boolean,
+  getModifiersForCurrentSpecies: any
 ): number => {
   // Replace each variable in the formula with its corresponding value
   const replacedFormula = formula.replace(/[A-Za-z]+/g, (match) => {
     const variable = match.trim();
-    if (values.hasOwnProperty(variable)) {
-      return values[variable].toString();
+
+    const finalValues: any = {}
+    const mods = getModifiersForCurrentSpecies()
+
+    for (const k in values) {
+      if (Object.prototype.hasOwnProperty.call(values, k)) {
+        const base = values[k]
+        const mod = mods[k]
+        finalValues[k] = base + mod
+      }
+    }
+    if (values.hasOwnProperty(variable) && finalValues.hasOwnProperty(variable)) {
+      return finalValues[variable].toString();
     }
     return match; // If the variable is not found, leave it unchanged
   });

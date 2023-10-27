@@ -158,8 +158,7 @@ export const InputPage = ({
             <option value="45">Max</option>
             <option value="32">32</option>
             <option value="28">28</option>
-            <option value="26">26</option>
-            <option value="24">24</option>
+            <option value="25">25</option>
             <option value="22">22</option>
             <option value="20">20</option>
           </select>

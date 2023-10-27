@@ -14,10 +14,11 @@ type Props = {
   state: any;
   choosenLang: number;
   derivative: any;
+  getModifiersForCurrentSpecies: any;
 };
 
 // The result page shows all the choices made in the previous screen
-export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
+export const ResultsPage = ({ state, choosenLang, derivative, getModifiersForCurrentSpecies }: Props) => {
   const getFinalSources = (source: "v" | "m" | "a") => {
     const cleanCharSpecies = state.charSpecies as ValidPlayerSpecies;
     const cleanCharClass = state.charClass as ValidPlayerClasses;
@@ -54,7 +55,8 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
         const skillValue = calculateFormula(
           foundSkill.initialValFormula,
           values,
-          true
+          true,
+          getModifiersForCurrentSpecies,
         );
         return {
           skillName: foundSkill.name,
@@ -187,12 +189,14 @@ export const ResultsPage = ({ state, choosenLang, derivative }: Props) => {
         {getSkillListWithInitialValue(state.charSkillPack, state.charStats).map(
           (result) => {
             return (
+              
               <div
                 className="block w-full mt-1"
                 key={`${result.skillName[0]
                   .replace(/\W/g, "")
                   .substring(0, 8)}`}
               >
+     
                 <TextInput
                   title={result.skillName}
                   chosenLang={choosenLang}

@@ -218,6 +218,7 @@ function App() {
             state={state}
             choosenLang={choosenLang}
             derivative={derivative}
+            getModifiersForCurrentSpecies={getModifiersForCurrentSpecies}
           />
         )}
       </main>
